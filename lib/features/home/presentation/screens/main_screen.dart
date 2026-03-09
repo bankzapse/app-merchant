@@ -4,6 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../auth/providers/auth_provider.dart';
 import 'dashboard_screen.dart';
 import '../../orders/presentation/screens/orders_screen.dart';
+import '../../menu/presentation/screens/menu_screen.dart';
+import '../../profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -18,8 +20,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   final List<Widget> _pages = const [
     DashboardScreen(),
     OrdersScreen(),
-    Center(child: Text('Menu')),
-    Center(child: Text('Profile')),
+    MenuScreen(),
+    ProfileScreen(),
   ];
 
   @override
