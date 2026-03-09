@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'mock_interceptor.dart';
 
 class ApiClient {
   static const String baseUrl = 'http://localhost:8080/api/food';
+  static const bool useMock = true; // Toggle this to false to use real API
+  
   late final Dio _dio;
   
   ApiClient() {
@@ -15,6 +18,11 @@ class ApiClient {
         'Accept': 'application/json',
       },
     ));
+
+    // Add Mock Interceptor if enabled
+    if (useMock) {
+      _dio.interceptors.add(MockInterceptor());
+    }
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
