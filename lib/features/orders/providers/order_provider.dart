@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/api_client.dart';
-import '../models/order.dart';
+import 'package:merchant_app/core/network/api_client.dart';
+import 'package:merchant_app/features/orders/models/order.dart';
 
 class OrderNotifier extends StateNotifier<AsyncValue<List<Order>>> {
   OrderNotifier() : super(const AsyncValue.loading());

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/api_client.dart';
+import 'package:merchant_app/core/network/api_client.dart';
+import 'package:dio/dio.dart';
 
 class AdCampaign {
   final String id;

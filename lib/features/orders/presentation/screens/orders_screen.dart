@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../providers/order_provider.dart';
+import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/orders/providers/order_provider.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/api_client.dart';
-import '../models/menu.dart';
-import '../../home/providers/restaurant_provider.dart';
+import 'package:merchant_app/core/network/api_client.dart';
+import 'package:merchant_app/features/menu/models/menu.dart';
+import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
 
 class MenuNotifier extends StateNotifier<AsyncValue<List<MenuCategory>>> {
   MenuNotifier() : super(const AsyncValue.loading());

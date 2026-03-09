@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../auth/providers/auth_provider.dart';
-import 'dashboard_screen.dart';
-import '../../orders/presentation/screens/orders_screen.dart';
-import '../../menu/presentation/screens/menu_screen.dart';
-import '../../profile/presentation/screens/profile_screen.dart';
+import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/features/auth/providers/auth_provider.dart';
+import 'package:merchant_app/features/home/presentation/screens/dashboard_screen.dart';
+import 'package:merchant_app/features/orders/presentation/screens/orders_screen.dart';
+import 'package:merchant_app/features/menu/presentation/screens/menu_screen.dart';
+import 'package:merchant_app/features/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
