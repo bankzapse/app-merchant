@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merchant_app/core/network/api_client.dart';
 import 'package:merchant_app/features/menu/models/menu.dart';
-import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
 
 class MenuNotifier extends StateNotifier<AsyncValue<List<MenuCategory>>> {
   MenuNotifier() : super(const AsyncValue.loading());
@@ -63,69 +62,6 @@ class MenuNotifier extends StateNotifier<AsyncValue<List<MenuCategory>>> {
     }
   }
 
-  Future<bool> createCategory(String name, int sortOrder) async {
-
-  Future<bool> updateCategory(String id, String name, int sortOrder, bool isActive) async {
-    try {
-      await apiClient.dio.put('/restaurant/menu/categories/$id', data: {
-        'name': name,
-        'sort_order': sortOrder,
-        'is_active': isActive,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> deleteCategory(String id) async {
-    try {
-      await apiClient.dio.delete('/restaurant/menu/categories/$id');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> createMenuItem(String categoryId, String name, String desc, double price, String? imageUrl) async {
-    try {
-      await apiClient.dio.post('/restaurant/menu/items', data: {
-        'category_id': categoryId,
-        'name': name,
-        'description': desc,
-        'price': price,
-        if (imageUrl != null) 'image_url': imageUrl,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> updateMenuItem(String id, String categoryId, String name, String desc, double price, bool isAvailable, String? imageUrl) async {
-    try {
-      await apiClient.dio.put('/restaurant/menu/items/$id', data: {
-        'category_id': categoryId,
-        'name': name,
-        'description': desc,
-        'price': price,
-        'is_available': isAvailable,
-        if (imageUrl != null) 'image_url': imageUrl,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> deleteMenuItem(String id) async {
-    try {
-      await apiClient.dio.delete('/restaurant/menu/items/$id');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
 }
 
 // Global Provider

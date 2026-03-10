@@ -24,7 +24,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
     try {
       final api = ApiClient();
-      await api.put('/api/food/restaurant/profile', data: {
+      await api.dio.put('/api/food/restaurant/profile', data: {
         'restaurant_name': _nameController.text,
         'address': _addressController.text,
         'description': _descController.text,

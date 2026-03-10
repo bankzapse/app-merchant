@@ -59,7 +59,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
 
     try {
       final api = ApiClient();
-      await api.post('/api/food/restaurant/withdraw', data: {
+      await api.dio.post('/api/food/restaurant/withdraw', data: {
         'amount': amount,
       });
 
