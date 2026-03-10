@@ -13,7 +13,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return profileState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(child: Text('Error loading dashboard: $error')),
+      error: (error, _) => Center(child: Text('เกิดข้อผิดพลาดในการโหลดข้อมูล: $error')),
       data: (profile) {
         return RefreshIndicator(
           onRefresh: () => ref.read(restaurantProfileProvider.notifier).fetchProfile(),
@@ -43,7 +43,7 @@ class DashboardScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Store Status', style: AppTypography.titleLarge),
+                Text('สถานะร้านค้า', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 Switch(
                   value: profile.isOpen,
                   activeColor: AppColors.primary,
@@ -60,15 +60,15 @@ class DashboardScreen extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Busy Mode', style: AppTypography.titleMedium),
-                    Text('Temporarily stop orders', style: AppTypography.bodySmall),
+                    Text('โหมดไม่ว่าง', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                    Text('หยุดรับออเดอร์ชั่วคราว', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
                   ],
                 ),
                 OutlinedButton(
                   onPressed: () {
                     _showBusyModeDialog(context, ref);
                   },
-                  child: const Text('Set Busy'),
+                  child: const Text('ตั้งค่า'),
                 ),
               ],
             ),
@@ -87,9 +87,9 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Text('Today\'s Orders', style: AppTypography.bodyMedium),
+                  Text('ออเดอร์วันนี้', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                   const SizedBox(height: 8),
-                  Text('12', style: AppTypography.headlineMedium.copyWith(color: AppColors.primary)),
+                  Text('12', style: AppTypography.heading4.copyWith(color: AppColors.primary)),
                 ],
               ),
             ),
@@ -102,9 +102,9 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Text('Revenue', style: AppTypography.bodyMedium),
+                  Text('รายได้', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                   const SizedBox(height: 8),
-                  Text('฿ 4,500', style: AppTypography.headlineMedium.copyWith(color: AppColors.primary)),
+                  Text('฿ 4,500', style: AppTypography.heading4.copyWith(color: AppColors.primary)),
                 ],
               ),
             ),
@@ -118,16 +118,16 @@ class DashboardScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Set Busy Mode'),
-        content: const Text('Set store to busy for 30 minutes?'),
+        title: const Text('ตั้งค่าโหมดไม่ว่าง'),
+        content: const Text('ต้องการตั้งค่าร้านค้าเป็นไม่ว่างเป็นเวลา 30 นาทีหรือไม่?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('ยกเลิก')),
           ElevatedButton(
             onPressed: () {
               ref.read(restaurantProfileProvider.notifier).toggleBusyMode(true, durationMin: 30);
               Navigator.pop(ctx);
             },
-            child: const Text('Confirm'),
+            child: const Text('ยืนยัน'),
           )
         ],
       ),

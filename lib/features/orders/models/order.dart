@@ -5,17 +5,27 @@ class OrderItem {
   final int quantity;
   final double unitPrice;
   final double subtotal;
+  final List<String>? modifiers;
 
-  OrderItem({required this.id, required this.menuItemId, required this.name, required this.quantity, required this.unitPrice, required this.subtotal});
+  OrderItem({
+    required this.id,
+    required this.menuItemId,
+    required this.name,
+    required this.quantity,
+    required this.unitPrice,
+    required this.subtotal,
+    this.modifiers,
+  });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      id: json['id'],
-      menuItemId: json['menu_item_id'],
-      name: json['name'],
-      quantity: json['quantity'],
+      id: json['id'] ?? '',
+      menuItemId: json['menu_item_id'] ?? '',
+      name: json['name'] ?? '',
+      quantity: json['quantity'] ?? 0,
       unitPrice: json['unit_price']?.toDouble() ?? 0.0,
       subtotal: json['subtotal']?.toDouble() ?? 0.0,
+      modifiers: (json['modifiers'] as List?)?.map((m) => m.toString()).toList(),
     );
   }
 }

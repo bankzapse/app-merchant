@@ -32,6 +32,7 @@ class MenuItem {
   final double price;
   final String? imageUrl;
   final bool isAvailable;
+  final List<dynamic>? modifiers;
 
   MenuItem({
     required this.id,
@@ -41,6 +42,7 @@ class MenuItem {
     required this.price,
     this.imageUrl,
     required this.isAvailable,
+    this.modifiers,
   });
 
   factory MenuItem.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class MenuItem {
       price: json['price']?.toDouble() ?? 0.0,
       imageUrl: json['image_url'],
       isAvailable: json['is_available'] ?? true,
+      modifiers: json['modifiers'] as List?,
     );
   }
 }

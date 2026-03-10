@@ -17,17 +17,53 @@ class MenuNotifier extends StateNotifier<AsyncValue<List<MenuCategory>>> {
     }
   }
 
-  Future<bool> createCategory(String name, int sortOrder) async {
+  Future<void> addCategory(String name) async {
     try {
-      await apiClient.dio.post('/restaurant/menu/categories', data: {
+      final response = await apiClient.dio.post('/restaurant/menu/categories', data: {
         'name': name,
-        'sort_order': sortOrder,
+        'sort_order': state.value?.length ?? 0 + 1,
       });
-      return true;
+      if (response.statusCode == 201) {
+        final newCategory = MenuCategory.fromJson(response.data);
+        final currentCategories = state.value ?? [];
+        state = AsyncValue.data([...currentCategories, newCategory]);
+      }
     } catch (e) {
-      return false;
+      throw Exception('ไม่สามารถเพิ่มหมวดหมู่ได้');
     }
   }
+
+  Future<void> addItem({required String categoryId, required String name, required String description, required double price}) async {
+    try {
+      final response = await apiClient.dio.post('/restaurant/menu/items', data: {
+        'category_id': categoryId,
+        'name': name,
+        'description': description,
+        'price': price,
+      });
+      if (response.statusCode == 201) {
+        final newItem = MenuItem.fromJson(response.data);
+        final currentCategories = state.value ?? [];
+        final updatedCategories = currentCategories.map((cat) {
+          if (cat.id == categoryId) {
+            return MenuCategory(
+              id: cat.id,
+              name: cat.name,
+              sortOrder: cat.sortOrder,
+              isActive: cat.isActive,
+              items: [...cat.items, newItem],
+            );
+          }
+          return cat;
+        }).toList();
+        state = AsyncValue.data(updatedCategories);
+      }
+    } catch (e) {
+      throw Exception('ไม่สามารถเพิ่มเมนูได้');
+    }
+  }
+
+  Future<bool> createCategory(String name, int sortOrder) async {
 
   Future<bool> updateCategory(String id, String name, int sortOrder, bool isActive) async {
     try {

@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
 import 'package:merchant_app/features/menu/providers/menu_provider.dart';
+import 'package:merchant_app/features/menu/providers/menu_provider.dart';
 import 'package:merchant_app/features/auth/providers/auth_provider.dart';
+import 'package:merchant_app/features/menu/presentation/widgets/add_category_dialog.dart';
+import 'package:merchant_app/features/menu/presentation/widgets/add_menu_item_dialog.dart';
 
 class MenuScreen extends ConsumerStatefulWidget {
   const MenuScreen({super.key});
@@ -50,9 +53,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               labelColor: AppColors.primary,
               unselectedLabelColor: AppColors.textTertiary,
               indicatorColor: AppColors.primary,
+              labelStyle: AppTypography.label3,
+              unselectedLabelStyle: AppTypography.label3,
               tabs: [
-                Tab(text: 'Categories & Items'),
-                Tab(text: 'Modifiers'),
+                Tab(text: 'หมวดหมู่และเมนู'),
+                Tab(text: 'ตัวเลือกเพิ่มเติม'),
               ],
             ),
             Expanded(
@@ -74,7 +79,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
     return menuState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e')),
       data: (categories) {
         if (categories.isEmpty) {
           return Center(
@@ -83,9 +88,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               children: [
                 Icon(Icons.restaurant_menu, size: 60, color: AppColors.textTertiary),
                 const SizedBox(height: 16),
-                Text('No menu items yet', style: AppTypography.titleLarge),
+                Text('ยังไม่มีรายการเมนู', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 const SizedBox(height: 8),
-                Text('Tap + to add your first category', style: AppTypography.bodySmall),
+                Text('กด + เพื่อเพิ่มหมวดหมู่แรกของคุณ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
               ],
             ),
           );
@@ -98,8 +103,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             return Card(
               margin: const EdgeInsets.only(bottom: 16),
               child: ExpansionTile(
-                title: Text(category.name, style: AppTypography.titleMedium),
-                subtitle: Text('${category.items.length} items', style: AppTypography.bodySmall),
+                title: Text(category.name, style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                subtitle: Text('${category.items.length} รายการ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
                 children: category.items.map((item) {
                   return ListTile(
                     leading: Container(
@@ -113,8 +118,21 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                         ? Image.network(item.imageUrl!, fit: BoxFit.cover)
                         : const Icon(Icons.fastfood, color: Colors.white),
                     ),
-                    title: Text(item.name),
-                    subtitle: Text('฿${item.price} - ${item.isAvailable ? "Available" : "Sold Out"}'),
+                    title: Text(item.name, style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('฿${item.price} - ${item.isAvailable ? "พร้อมขาย" : "สินค้าหมด"}', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                        if (item.modifiers != null && item.modifiers!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'ตัวเลือก: ${(item.modifiers! as List).map((m) => "${m['name']} (+฿${m['price']})").join(", ")}',
+                              style: AppTypography.support2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                            ),
+                          ),
+                      ],
+                    ),
                     trailing: IconButton(
                       icon: const Icon(Icons.edit, size: 20),
                       onPressed: () {
@@ -133,7 +151,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   Widget _buildModifiersTab() {
     return Center(
-      child: Text('Modifier Management Coming Soon', style: AppTypography.bodyMedium),
+      child: Text('ระบบจัดการตัวเลือกเพิ่มเติมเร็วกว่านี้', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
     );
   }
 
@@ -150,23 +168,23 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             children: [
               ListTile(
                 leading: const Icon(Icons.category, color: AppColors.primary),
-                title: const Text('Add Category'),
+                title: Text('เพิ่มหมวดหมู่', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 onTap: () {
                   Navigator.pop(context);
-                  // Show Category Dialog
+                  showDialog(context: context, builder: (_) => const AddCategoryDialog());
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.fastfood, color: AppColors.primary),
-                title: const Text('Add Menu Item'),
+                title: Text('เพิ่มรายการเมนู', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 onTap: () {
                   Navigator.pop(context);
-                  // Show Item Dialog
+                  showDialog(context: context, builder: (_) => const AddMenuItemDialog());
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.tune, color: AppColors.primary),
-                title: const Text('Add Modifier Group'),
+                title: Text('เพิ่มกลุ่มตัวเลือกเพิ่มเติม', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 onTap: () {
                   Navigator.pop(context);
                   // Show Modifier Dialog

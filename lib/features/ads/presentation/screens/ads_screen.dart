@@ -21,10 +21,10 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
     final adState = ref.watch(adProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Advertisement')),
+      appBar: AppBar(title: Text('การโฆษณา', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh))),
       body: adState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e')),
         data: (ad) {
           if (ad != null && _budgetController.text.isEmpty) {
             _budgetController.text = ad.dailyBudget.toString();
@@ -39,23 +39,23 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
               children: [
                 if (ad != null) _buildStatsCard(ad),
                 const SizedBox(height: 24),
-                Text('Campaign Settings', style: AppTypography.titleLarge),
+                Text('การตั้งค่าแคมเปญ', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _budgetController,
-                  decoration: const InputDecoration(labelText: 'Daily Budget (THB)'),
+                  decoration: const InputDecoration(labelText: 'งบประมาณรายวัน (บาท)'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _bidController,
-                  decoration: const InputDecoration(labelText: 'Bid per Click (THB)'),
+                  decoration: const InputDecoration(labelText: 'ราคาประมูลต่อคลิก (บาท)'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 if (ad != null)
                   SwitchListTile(
-                    title: const Text('Campaign Active'),
+                    title: Text('เปิดใช้งานแคมเปญ', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                     value: _isActive,
                     onChanged: (val) {
                       setState(() => _isActive = val);
@@ -73,7 +73,7 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
                       ref.read(adProvider.notifier).updateAd(budget, bid, _isActive);
                     }
                   },
-                  child: Text(ad == null ? 'Create Campaign' : 'Save Changes'),
+                  child: Text(ad == null ? 'สร้างแคมเปญ' : 'บันทึกการเปลี่ยนแปลง', style: AppTypography.label2),
                 ),
               ],
             ),
@@ -90,8 +90,8 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text('Today\'s Spend', style: AppTypography.bodySmall),
-            Text('฿${ad.currentSpend}', style: AppTypography.headlineMedium.copyWith(color: AppColors.primary)),
+            Text('ค่าโฆษณาวันนี้', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+            Text('฿${ad.currentSpend}', style: AppTypography.heading4.copyWith(color: AppColors.primary)),
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: ad.dailyBudget > 0 ? (ad.currentSpend / ad.dailyBudget).clamp(0.0, 1.0) : 0,
@@ -99,7 +99,7 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
               color: AppColors.primary,
             ),
             const SizedBox(height: 4),
-            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (Budget)', style: AppTypography.bodySmall),
+            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (งบประมาณ)', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
           ],
         ),
       ),

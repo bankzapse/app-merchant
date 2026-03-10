@@ -15,7 +15,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  bool _obscurePassword = true;
+  bool _savePassword = false;
 
   @override
   void dispose() {
@@ -25,7 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) return;
 
     final success = await ref.read(authProvider.notifier).login(
           _usernameController.text.trim(),
@@ -48,85 +49,179 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final isInputValid = _usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
+      appBar: AppBar(
+        backgroundColor: AppColors.surface,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/welcome');
+            }
+          },
+        ),
+        title: Text(
+          'เข้าสู่ระบบ',
+          style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'ระบุชื่อผู้ใช้งานของคุณ',
+                style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _usernameController.text.isNotEmpty ? AppColors.primary : AppColors.border,
+                  ),
+                ),
+                child: TextField(
+                  controller: _usernameController,
+                  onChanged: (_) => setState(() {}),
+                  style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'รหัสผ่าน',
+                style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _passwordController.text.isNotEmpty ? AppColors.primary : AppColors.border,
+                  ),
+                ),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  onChanged: (_) => setState(() {}),
+                  style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                  decoration: InputDecoration(
+                    hintText: 'ระบุรหัสผ่าน',
+                    hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                         _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, 
+                        color: AppColors.textPrimary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
                 children: [
-                  Icon(
-                    Icons.storefront_rounded,
-                    size: 80,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Mass Merchant',
-                    style: AppTypography.headlineLarge.copyWith(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Manage your restaurant operations',
-                    style: AppTypography.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 48),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock_outline),
-                    ),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: authState.isLoading ? null : _login,
-                      child: authState.isLoading
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text('Login'),
-                    ),
-                  ),
+                   SizedBox(
+                     height: 24,
+                     width: 24,
+                     child: Checkbox(
+                       value: _savePassword,
+                       onChanged: (value) {
+                         setState(() {
+                           _savePassword = value ?? false;
+                         });
+                       },
+                       activeColor: AppColors.primary,
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                     ),
+                   ),
+                   const SizedBox(width: 8),
+                   Text('บันทึกรหัสผ่าน', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 ],
               ),
-            ),
+              const SizedBox(height: 24),
+              RichText(
+                  text: TextSpan(
+                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                    children: [
+                      const TextSpan(text: 'ลืม '),
+                      TextSpan(text: 'ชื่อผู้ใช้งาน', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                      const TextSpan(text: ' หรือ '),
+                      TextSpan(text: 'รหัสผ่าน', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                      const TextSpan(text: ' ของคุณ?'),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 48),
+              ElevatedButton(
+                onPressed: (!authState.isLoading && isInputValid) ? _login : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isInputValid ? AppColors.primary : AppColors.background, 
+                  foregroundColor: isInputValid ? Colors.white : AppColors.textTertiary,
+                  disabledBackgroundColor: AppColors.background,
+                  disabledForegroundColor: AppColors.textTertiary,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: authState.isLoading
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        'เข้าสู่ระบบ',
+                        style: AppTypography.label2.copyWith(color: isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                   context.push('/register/phone');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryLight,
+                  foregroundColor: AppColors.primaryDark,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: Text('เข้าสู่ระบบด้วยโทรศัพท์', style: AppTypography.label2.copyWith(color: AppColors.primaryDark)),
+              ),
+            ],
           ),
         ),
       ),
