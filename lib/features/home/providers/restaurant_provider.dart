@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merchant_app/core/network/api_client.dart';
-import 'package:dio/dio.dart';
 
 class RestaurantProfile {
   final String name;

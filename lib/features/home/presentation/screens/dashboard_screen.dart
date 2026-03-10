@@ -61,7 +61,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('โหมดไม่ว่าง', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                    Text('หยุดรับออเดอร์ชั่วคราว', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                    Text('หยุดรับออเดอร์ชั่วคราว', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                   ],
                 ),
                 OutlinedButton(

@@ -67,7 +67,7 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
               const SizedBox(height: 8),
               Text(
                 'ลงทะเบียนด้วยเบอร์โทรศัพท์เพื่อเริ่มต้นใช้งาน\nMass Merchant',
-                style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
               ),
               const SizedBox(height: 32),
               Row(
@@ -80,7 +80,7 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                     ),
                     child: Row(
                       children: [
-                        Text('+66', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                        Text('+66', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                         const SizedBox(width: 8),
                         const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary, size: 20),
                       ],
@@ -92,7 +92,7 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: _phoneController.text.isNotEmpty ? AppColors.primary : AppColors.border,
+                          color: _phoneController.text.isNotEmpty ? AppColors.primary : AppColors.semanticGrayNeutralBorderLightGray,
                         ),
                       ),
                       child: TextField(
@@ -103,13 +103,13 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: '81 123 4567',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           counterText: '',
                           suffixIcon: _phoneController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.cancel, color: AppColors.textTertiary, size: 20),
+                                  icon: const Icon(Icons.cancel, color: AppColors.semanticGrayNeutralFgLowOnWhite, size: 20),
                                   onPressed: () {
                                     _phoneController.clear();
                                   },
@@ -128,16 +128,16 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                 } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                  foregroundColor: _isInputValid ? Colors.white : AppColors.textTertiary,
+                  foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                   disabledBackgroundColor: AppColors.background,
-                  disabledForegroundColor: AppColors.textTertiary,
+                  disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
                 ),
-                child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow)),
+                child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
               ),
             ],
           ),

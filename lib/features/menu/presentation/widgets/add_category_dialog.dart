@@ -59,7 +59,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.pop(context, false),
-          child: const Text('ยกเลิก', style: TextStyle(color: AppColors.textTertiary)),
+          child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,

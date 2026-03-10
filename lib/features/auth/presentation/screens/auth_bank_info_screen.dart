@@ -83,7 +83,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.divider,
+              color: AppColors.semanticGrayNeutralBorderLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -105,7 +105,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     const SizedBox(height: 12),
                     Text(
                       'Mass จำเป็นต้องขอบัญชีธนาคาร เพื่อยืนยันข้อมูลธนาคาร\nและดำเนินการธุรกรรมการเงินกับคุณ ซึ่งรายได้จะถูกโอน\nผ่านทางบัญชีธนาคารที่คุณลงทะเบียน',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 32),
                     Text(
@@ -117,14 +117,14 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: TextField(
                         controller: _accountOwnerController,
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'ชื่อ-นามสกุล',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -137,12 +137,12 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedBank,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow)),
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
                           isExpanded: true,
                           icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                           items: <String>['กสิกรไทย', 'ไทยพาณิชย์', 'กรุงไทย'].map((String value) {
@@ -165,7 +165,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: TextField(
                         controller: _accountNumberController,
@@ -173,7 +173,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: '8888888888',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -197,7 +197,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border, style: BorderStyle.solid), // Should be dashed in real app
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid), // Should be dashed in real app
                       ),
                       child: Row(
                         children: [
@@ -217,7 +217,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text('ไฟล์ .pdf .jpg หรือ .png', style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                                Text('ไฟล์ .pdf .jpg หรือ .png', style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                               ],
                             ),
                           ),
@@ -254,7 +254,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'โปรดอัปโหลดเอกสารเพิ่มเติม ในกรณีดังต่อไปนี้\n• หนังสือรับรองการเปลี่ยนชื่อ-สกุล หรือใบทะเบียนสมรส\n   หย่า หากชื่อเจ้าของบัญชีไม่ตรงตามชื่อที่ใช้ลงทะเบียน\n• บัตรประชาชนของทุกบุคคล หากใช้บัญชีร่วม',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 16),
                     // Image picker representation 2
@@ -265,7 +265,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.border, style: BorderStyle.solid), // Should be dashed
+                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid), // Should be dashed
                         ),
                         child: Column(
                           children: [
@@ -284,7 +284,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'Mass จะใช้ข้อมูลนี้สำหรับกรณีที่ต้องติดต่อเกี่ยวกับบัญชี\nธนาคาร ข้อมูลใบแจ้งหนี้ หรือใบกำกับภาษี',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 24),
                     Column(
@@ -294,7 +294,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildTextFieldLabel('ชื่อผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.info, size: 16),
+                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
                           ],
                         ),
                         Text('นาย ธนนันต์ อนุรักษ์', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
@@ -303,7 +303,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildTextFieldLabel('เบอร์เจ้าของร้าน/ผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.info, size: 16),
+                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
                           ],
                         ),
                         Text('+66 892616445', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
@@ -312,7 +312,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildTextFieldLabel('อีเมลเจ้าของร้าน/ผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.info, size: 16),
+                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
                           ],
                         ),
                         Text('bankzapse@gmail.com', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
@@ -327,12 +327,12 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                         Expanded(
                           child: RichText(
                             text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                               children: [
                                 const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
                                 TextSpan(
                                   text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.info),
+                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
                                 ),
                                 const TextSpan(text: ' ของเรา'),
                               ],
@@ -355,16 +355,16 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.textTertiary,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                     disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.textTertiary,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
                 ),
               ),
             ),

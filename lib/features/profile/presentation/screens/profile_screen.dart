@@ -78,7 +78,7 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Text(
                   '123 ถนนสุขุมวิท, กรุงเทพมหานคร',
-                  style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                  style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -183,11 +183,11 @@ class ProfileScreen extends ConsumerWidget {
                     children: [
                       Text(title, style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                       const SizedBox(height: 4),
-                      Text(subtitle, style: AppTypography.caption1.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                      Text(subtitle, style: AppTypography.caption1.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: AppColors.textTertiary),
+                const Icon(Icons.chevron_right, color: AppColors.semanticGrayNeutralFgLowOnWhite),
               ],
             ),
           ),

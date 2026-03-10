@@ -38,7 +38,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
               onChanged: onChanged,
               activeColor: AppColors.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              side: const BorderSide(color: AppColors.border, width: 2),
+              side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray, width: 2),
             ),
           ),
           const SizedBox(width: 16),
@@ -46,13 +46,13 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
               child: richText != null 
               ? RichText(
                   text: TextSpan(
-                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid, height: 1.5),
+                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
                     children: richText,
                   ),
                 )
               : Text(
                text,
-               style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid, height: 1.5),
+               style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
              ),
            ),
         ],
@@ -89,7 +89,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.divider,
+              color: AppColors.semanticGrayNeutralBorderLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -111,7 +111,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                     const SizedBox(height: 12),
                     Text(
                       'เมื่อทำเครื่องหมายในช่องด้านล่าง จะถือว่าคุณยืนยันในนาม\nของคุณ บริษัท และบุคคลที่ได้รับการเสนอชื่อ (รวมเรียกว่า\n"คุณ") ว่าคุณได้อ่าน ทำความเข้าใจ และยอมรับ:',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid, height: 1.5),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
                     ),
                     const SizedBox(height: 32),
                     _buildCheckboxRow(
@@ -124,15 +124,15 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                         });
                       },
                       richText: [
-                        TextSpan(text: 'ข้อตกลงการใช้งาน Mass', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'ข้อตกลงการใช้งาน Mass', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ', '),
-                        TextSpan(text: 'ข้อกำหนดและ\nเงื่อนไขร้านค้า (ข้อกำหนดและเงื่อนไข\nMassFood)', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'ข้อกำหนดและ\nเงื่อนไขร้านค้า (ข้อกำหนดและเงื่อนไข\nMassFood)', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ', '),
-                         TextSpan(text: 'ความยินยอมรับข้อตกลง', style: TextStyle(color: AppColors.info)),
+                         TextSpan(text: 'ความยินยอมรับข้อตกลง', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ',\n'),
-                        TextSpan(text: 'นโยบายสินค้า', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'นโยบายสินค้า', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                          const TextSpan(text: ', '),
-                        TextSpan(text: 'ประกาศความเป็นส่วนตัวของ\nMass', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                        TextSpan(text: 'ประกาศความเป็นส่วนตัวของ\nMass', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                       ]
                     ),
                     _buildCheckboxRow(
@@ -146,9 +146,9 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                       },
                        richText: [
                         const TextSpan(text: 'ตกลงเข้าร่วมทดลองใช้ฟรีแคมเปญร้านเล็ก\nลดทั้งร้าน (ตกลงยอมรับ'),
-                        TextSpan(text: 'เงื่อนไขระยะเวลา\nยกเว้นค่าธรรมเนียมแคมเปญ "ร้านเล็กลดทั้ง\nร้าน"', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'เงื่อนไขระยะเวลา\nยกเว้นค่าธรรมเนียมแคมเปญ "ร้านเล็กลดทั้ง\nร้าน"', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ' และ '),
-                        TextSpan(text: 'ข้อกำหนดของการให้บริการ Mass\nMarketing Services', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'ข้อกำหนดของการให้บริการ Mass\nMarketing Services', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ')'),
                       ]
                     ),
@@ -163,7 +163,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                       },
                       richText: [
                         const TextSpan(text: 'การส่ง'),
-                        TextSpan(text: 'ข้อมูลการตลาด', style: TextStyle(color: AppColors.info)),
+                        TextSpan(text: 'ข้อมูลการตลาด', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ' เช่น แนวทางปฏิบัติที่\nดีที่สุด ข้อมูลเชิงลึก และโปรโมชันเพื่อช่วย\nเพิ่มยอดขาย'),
                       ]
                     ),
@@ -187,7 +187,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                               },
                               activeColor: AppColors.primary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                              side: const BorderSide(color: AppColors.border, width: 2),
+                              side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray, width: 2),
                             ),
                           ),
                        ],
@@ -206,16 +206,16 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.textTertiary,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                     disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.textTertiary,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('ส่ง', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow)),
+                  child: Text('ส่ง', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
                 ),
               ),
             ),

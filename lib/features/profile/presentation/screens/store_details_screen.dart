@@ -126,16 +126,16 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
           height: height,
           width: width,
           decoration: BoxDecoration(
-            color: AppColors.border.withOpacity(0.5),
+            color: AppColors.semanticGrayNeutralBorderLightGray.withOpacity(0.5),
             shape: shape,
             borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(12) : null,
           ),
           child: const Center(
-            child: Icon(Icons.add_a_photo, color: AppColors.textTertiary),
+            child: Icon(Icons.add_a_photo, color: AppColors.semanticGrayNeutralFgLowOnWhite),
           ),
         ),
         const SizedBox(height: 8),
-        Text(label, style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+        Text(label, style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
       ],
     );
   }

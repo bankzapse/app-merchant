@@ -76,7 +76,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'อีเมลนี้สำหรับการลงทะเบียนในนามของร้าน และการเข้าสู่ระบบ\nบนแอป Mass Merchant',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 32),
                     RichText(
@@ -92,7 +92,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: TextField(
                         controller: _emailController,
@@ -100,7 +100,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'เช่น name@email.com',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -120,7 +120,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: TextField(
                         controller: _passwordController,
@@ -128,7 +128,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'กรอกรหัสผ่านที่ปลอดภัย',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           suffixIcon: IconButton(
@@ -175,16 +175,16 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.textTertiary,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                     disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.textTertiary,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow)),
+                  child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
                 ),
               ),
             ),

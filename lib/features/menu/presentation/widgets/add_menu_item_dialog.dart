@@ -127,7 +127,7 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
                 children: [
                   TextButton(
                     onPressed: _isLoading ? null : () => Navigator.pop(context, false),
-                    child: const Text('ยกเลิก', style: TextStyle(color: AppColors.textTertiary)),
+                    child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
                   ),
                   const SizedBox(width: 16),
                   ElevatedButton(

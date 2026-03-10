@@ -78,7 +78,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                                   padding: const EdgeInsets.only(left: 16, top: 2),
                                   child: Text(
                                     '+ ${(item.modifiers! as List).join(", ")}',
-                                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                                   ),
                                 ),
                             ],
@@ -102,7 +102,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
         return AppColors.warning;
       case 'RESTAURANT_ACCEPTED':
       case 'PREPARING':
-        return AppColors.info;
+        return AppColors.semanticSecondaryFgHigh;
       case 'READY_FOR_PICKUP':
         return AppColors.success;
       default:

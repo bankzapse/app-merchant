@@ -32,7 +32,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('ยกเลิก', style: TextStyle(color: AppColors.textTertiary)),
+              child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -146,7 +146,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   const SizedBox(height: 16),
                   Card(
                     color: AppColors.surface,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppColors.divider)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray)),
                     child: ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8),
@@ -154,7 +154,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                         child: Icon(Icons.account_balance, color: Colors.purple.shade400),
                       ),
                       title: Text('ธนาคารไทยพาณิชย์ (SCB)', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                      subtitle: Text('***-***-1234\nนาย สมชาย เข็มกลัด', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                      subtitle: Text('***-***-1234\nนาย สมชาย เข็มกลัด', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                       isThreeLine: true,
                     ),
                   ),

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
 import 'package:merchant_app/features/menu/providers/menu_provider.dart';
-import 'package:merchant_app/features/auth/providers/auth_provider.dart';
 import 'package:merchant_app/features/menu/presentation/widgets/add_category_dialog.dart';
 import 'package:merchant_app/features/menu/presentation/widgets/add_menu_item_dialog.dart';
 
@@ -50,7 +49,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           children: [
             const TabBar(
               labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.textTertiary,
+              unselectedLabelColor: AppColors.semanticGrayNeutralFgLowOnWhite,
               indicatorColor: AppColors.primary,
               labelStyle: AppTypography.label3,
               unselectedLabelStyle: AppTypography.label3,
@@ -85,11 +84,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.restaurant_menu, size: 60, color: AppColors.textTertiary),
+                Icon(Icons.restaurant_menu, size: 60, color: AppColors.semanticGrayNeutralFgLowOnWhite),
                 const SizedBox(height: 16),
                 Text('ยังไม่มีรายการเมนู', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                 const SizedBox(height: 8),
-                Text('กด + เพื่อเพิ่มหมวดหมู่แรกของคุณ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                Text('กด + เพื่อเพิ่มหมวดหมู่แรกของคุณ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
               ],
             ),
           );
@@ -103,14 +102,14 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               margin: const EdgeInsets.only(bottom: 16),
               child: ExpansionTile(
                 title: Text(category.name, style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                subtitle: Text('${category.items.length} รายการ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                subtitle: Text('${category.items.length} รายการ', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                 children: category.items.map((item) {
                   return ListTile(
                     leading: Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: AppColors.border,
+                        color: AppColors.semanticGrayNeutralBorderLightGray,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: item.imageUrl != null 
@@ -121,13 +120,13 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('฿${item.price} - ${item.isAvailable ? "พร้อมขาย" : "สินค้าหมด"}', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+                        Text('฿${item.price} - ${item.isAvailable ? "พร้อมขาย" : "สินค้าหมด"}', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                         if (item.modifiers != null && item.modifiers!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
                               'ตัวเลือก: ${(item.modifiers! as List).map((m) => "${m['name']} (+฿${m['price']})").join(", ")}',
-                              style: AppTypography.support2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                              style: AppTypography.support2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                             ),
                           ),
                       ],
@@ -150,7 +149,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   Widget _buildModifiersTab() {
     return Center(
-      child: Text('ระบบจัดการตัวเลือกเพิ่มเติมเร็วกว่านี้', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+      child: Text('ระบบจัดการตัวเลือกเพิ่มเติมเร็วกว่านี้', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
     );
   }
 

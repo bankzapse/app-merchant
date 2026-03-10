@@ -93,7 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _usernameController.text.isNotEmpty ? AppColors.primary : AppColors.border,
+                    color: _usernameController.text.isNotEmpty ? AppColors.primary : AppColors.semanticGrayNeutralBorderLightGray,
                   ),
                 ),
                 child: TextField(
@@ -116,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _passwordController.text.isNotEmpty ? AppColors.primary : AppColors.border,
+                    color: _passwordController.text.isNotEmpty ? AppColors.primary : AppColors.semanticGrayNeutralBorderLightGray,
                   ),
                 ),
                 child: TextField(
@@ -126,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                   decoration: InputDecoration(
                     hintText: 'ระบุรหัสผ่าน',
-                    hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow),
+                    hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     suffixIcon: IconButton(
@@ -167,12 +167,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 24),
               RichText(
                   text: TextSpan(
-                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     children: [
                       const TextSpan(text: 'ลืม '),
-                      TextSpan(text: 'ชื่อผู้ใช้งาน', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                      TextSpan(text: 'ชื่อผู้ใช้งาน', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                       const TextSpan(text: ' หรือ '),
-                      TextSpan(text: 'รหัสผ่าน', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                      TextSpan(text: 'รหัสผ่าน', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                       const TextSpan(text: ' ของคุณ?'),
                     ],
                   ),
@@ -182,9 +182,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: (!authState.isLoading && isInputValid) ? _login : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isInputValid ? AppColors.primary : AppColors.background, 
-                  foregroundColor: isInputValid ? Colors.white : AppColors.textTertiary,
+                  foregroundColor: isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                   disabledBackgroundColor: AppColors.background,
-                  disabledForegroundColor: AppColors.textTertiary,
+                  disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -202,7 +202,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       )
                     : Text(
                         'เข้าสู่ระบบ',
-                        style: AppTypography.label2.copyWith(color: isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow),
+                        style: AppTypography.label2.copyWith(color: isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite),
                       ),
               ),
               const SizedBox(height: 16),

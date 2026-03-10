@@ -99,7 +99,7 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
               color: AppColors.primary,
             ),
             const SizedBox(height: 4),
-            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (งบประมาณ)', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMid)),
+            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (งบประมาณ)', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
           ],
         ),
       ),

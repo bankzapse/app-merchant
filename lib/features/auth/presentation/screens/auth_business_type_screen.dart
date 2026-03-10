@@ -65,7 +65,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.divider,
+              color: AppColors.semanticGrayNeutralBorderLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -87,7 +87,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'โปรดกรอกข้อมูลร้าน ช่องทางการติดต่อ และเอกสารสำหรับ\nตรวจสอบยืนยัน',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 32),
                     Text(
@@ -100,12 +100,12 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedBusinessType,
-                          hint: Text('เลือกประเภทธุรกิจ', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLow)),
+                          hint: Text('เลือกประเภทธุรกิจ', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
                           isExpanded: true,
                           icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                           items: <String>['ธุรกิจส่วนตัว', 'ห้างหุ้นส่วนจำกัด', 'บริษัทจำกัด'].map((String value) {
@@ -131,7 +131,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'ธุรกิจส่วนตัวหรือกิจการที่มีเจ้าของคนเดียว สามารถใช้เบอร์\nและอีเมลของเจ้าของ เพื่อเป็นช่องทางในการติดต่อ',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 24),
                     Column(
@@ -141,7 +141,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildTextFieldLabel('เบอร์เจ้าของธุรกิจ'),
-                            const Icon(Icons.edit, color: AppColors.info, size: 16),
+                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
                           ],
                         ),
                         Text('+66 892616445', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
@@ -150,7 +150,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildTextFieldLabel('อีเมลเจ้าของธุรกิจ'),
-                            const Icon(Icons.edit, color: AppColors.info, size: 16),
+                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
                           ],
                         ),
                         Text('test@example.com', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
@@ -165,12 +165,12 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                         Expanded(
                           child: RichText(
                             text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                               children: [
                                 const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
                                 TextSpan(
                                   text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.info),
+                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
                                 ),
                                 const TextSpan(text: ' ของเรา'),
                               ],
@@ -193,16 +193,16 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.textTertiary,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
                     disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.textTertiary,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLow)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
                 ),
               ),
             ),

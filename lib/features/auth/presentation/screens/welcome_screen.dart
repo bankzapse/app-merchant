@@ -40,18 +40,18 @@ class WelcomeScreen extends StatelessWidget {
                        const SizedBox(height: 12),
                        Text(
                          'ขยายรูปแบบการให้บริการ ไม่ว่าจะเป็นเดลิเวอรี ให้ลูกค้ามารับที่ร้านได้ รับชำระแบบไม่ใช้เงินสด และอื่นๆ อีกมากมาย',
-                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                          textAlign: TextAlign.center,
                        ),
                        const SizedBox(height: 24),
                        Row(
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: [
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
+                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
                            const SizedBox(width: 8),
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
+                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
                            const SizedBox(width: 8),
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
+                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
                          ],
                        ),
                     ],
@@ -103,12 +103,12 @@ class WelcomeScreen extends StatelessWidget {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                       children: [
                         const TextSpan(text: 'ข้าพเจ้าได้อ่าน เข้าใจ และยอมรับ '),
-                        TextSpan(text: 'ข้อตกลงการใช้บริการ', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                        TextSpan(text: 'ข้อตกลงการใช้บริการ', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ' และ\n'),
-                        TextSpan(text: 'นโยบายความเป็นส่วนตัว', style: AppTypography.caption5.copyWith(color: AppColors.info)),
+                        TextSpan(text: 'นโยบายความเป็นส่วนตัว', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                       ],
                     ),
                   ),

@@ -103,7 +103,7 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
               const SizedBox(height: 8),
               Text(
                 'ส่งรหัส OTP ไปยัง +66 892616445 ทาง SMS แล้ว',
-                style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMid),
+                style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
               ),
               const SizedBox(height: 48),
               Row(
@@ -116,7 +116,7 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _focusNodes[index].hasFocus ? AppColors.primary : AppColors.border,
+                        color: _focusNodes[index].hasFocus ? AppColors.primary : AppColors.semanticGrayNeutralBorderLightGray,
                         width: _focusNodes[index].hasFocus ? 2 : 1,
                       ),
                     ),
@@ -155,7 +155,7 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
                 child: Text(
                   _secondsRemaining > 0 ? 'ส่งใหม่ใน ${_formatTime(_secondsRemaining)}' : 'ส่งรหัส OTP ใหม่',
                   style: AppTypography.caption5.copyWith(
-                    color: _secondsRemaining > 0 ? AppColors.semanticGrayNeutralFgLow : AppColors.primary,
+                    color: _secondsRemaining > 0 ? AppColors.semanticGrayNeutralFgLowOnWhite : AppColors.primary,
                     fontWeight: _secondsRemaining > 0 ? FontWeight.normal : FontWeight.bold,
                   ),
                 ),
