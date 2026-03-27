@@ -41,7 +41,8 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('เพิ่มหมวดหมู่ใหม่', style: AppTypography.heading6),
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      title: Text('เพิ่มหมวดหมู่ใหม่', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
       content: Form(
         key: _formKey,
         child: Column(
@@ -49,6 +50,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
           children: [
             TextFormField(
               controller: _nameController,
+              style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
               decoration: const InputDecoration(labelText: 'ชื่อหมวดหมู่ (เช่น เครื่องดื่ม, ของหวาน)'),
               validator: (val) => val == null || val.isEmpty ? 'กรุณากรอกชื่อหมวดหมู่' : null,
               autofocus: true,
@@ -59,13 +61,17 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.pop(context, false),
-          child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+          child: Text('ยกเลิก', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.semanticSuccessBgHigh,
+            foregroundColor: Colors.white,
+          ),
           child: _isLoading 
             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-            : const Text('เพิ่ม'),
+            : Text('เพิ่ม', style: AppTypography.label2.copyWith(color: Colors.white)),
         ),
       ],
     );

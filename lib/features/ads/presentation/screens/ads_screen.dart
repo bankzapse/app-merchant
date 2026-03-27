@@ -21,10 +21,10 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
     final adState = ref.watch(adProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('การโฆษณา', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh))),
+      appBar: AppBar(title: Text('การโฆษณา', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgWhite))),
       body: adState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e')),
+        error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e', style: AppTypography.body1.copyWith(color: AppColors.semanticErrorFgHigh))),
         data: (ad) {
           if (ad != null && _budgetController.text.isEmpty) {
             _budgetController.text = ad.dailyBudget.toString();
@@ -39,24 +39,27 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
               children: [
                 if (ad != null) _buildStatsCard(ad),
                 const SizedBox(height: 24),
-                Text('การตั้งค่าแคมเปญ', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                Text('การตั้งค่าแคมเปญ', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgWhite)),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _budgetController,
+                  style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgWhite),
                   decoration: const InputDecoration(labelText: 'งบประมาณรายวัน (บาท)'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _bidController,
+                  style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgWhite),
                   decoration: const InputDecoration(labelText: 'ราคาประมูลต่อคลิก (บาท)'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 if (ad != null)
                   SwitchListTile(
-                    title: Text('เปิดใช้งานแคมเปญ', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                    title: Text('เปิดใช้งานแคมเปญ', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgWhite)),
                     value: _isActive,
+                    activeColor: AppColors.primary,
                     onChanged: (val) {
                       setState(() => _isActive = val);
                     },
@@ -73,7 +76,11 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
                       ref.read(adProvider.notifier).updateAd(budget, bid, _isActive);
                     }
                   },
-                  child: Text(ad == null ? 'สร้างแคมเปญ' : 'บันทึกการเปลี่ยนแปลง', style: AppTypography.label2),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.semanticSuccessBgHigh,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text(ad == null ? 'สร้างแคมเปญ' : 'บันทึกการเปลี่ยนแปลง', style: AppTypography.label2.copyWith(color: Colors.white)),
                 ),
               ],
             ),
@@ -85,21 +92,25 @@ class _AdsScreenState extends ConsumerState<AdsScreen> {
 
   Widget _buildStatsCard(ad) {
     return Card(
-      color: AppColors.primaryLight,
+      color: AppColors.foundationGrayscale1300,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: AppColors.foundationGrayscale1100),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text('ค่าโฆษณาวันนี้', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+            Text('ค่าโฆษณาวันนี้', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
             Text('฿${ad.currentSpend}', style: AppTypography.heading4.copyWith(color: AppColors.primary)),
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: ad.dailyBudget > 0 ? (ad.currentSpend / ad.dailyBudget).clamp(0.0, 1.0) : 0,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.foundationGrayscale1200,
               color: AppColors.primary,
             ),
             const SizedBox(height: 4),
-            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (งบประมาณ)', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
+            Text('฿${ad.currentSpend} / ฿${ad.dailyBudget} (งบประมาณ)', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
           ],
         ),
       ),

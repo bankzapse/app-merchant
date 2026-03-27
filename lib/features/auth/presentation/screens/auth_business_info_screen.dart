@@ -51,7 +51,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
           text: label,
           style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
           children: isRequired
-              ? [const TextSpan(text: ' *', style: TextStyle(color: AppColors.error))]
+              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
               : [],
         ),
       ),
@@ -69,7 +69,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
@@ -80,12 +80,12 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -95,7 +95,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -106,7 +106,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.semanticGrayNeutralBorderLightGray,
+              color: AppColors.semanticGrayNeutralBgLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -150,20 +150,21 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
                     _buildTextFieldLabel('ที่ตั้งร้านค้า'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       child: Row(
                         children: [
-                          const Icon(Icons.location_on, color: AppColors.textPrimary),
+                          const Icon(Icons.location_on, color: AppColors.semanticGrayNeutralFgHigh),
                           const SizedBox(width: 12),
                           Text(
                             'เลือกหมุดร้านค้าของคุณ',
                             style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                           ),
                           const Spacer(),
-                          const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+                          const Icon(Icons.chevron_right, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                         ],
                       ),
                     ),
@@ -215,7 +216,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.textPrimary, size: 20),
+                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: RichText(
@@ -247,17 +248,17 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
                     context.push('/register/business_type');
                   } : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                    disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),

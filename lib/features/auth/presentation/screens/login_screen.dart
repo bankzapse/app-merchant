@@ -126,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                   decoration: InputDecoration(
                     hintText: 'ระบุรหัสผ่าน',
-                    hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                    hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     suffixIcon: IconButton(
@@ -182,9 +182,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: (!authState.isLoading && isInputValid) ? _login : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isInputValid ? AppColors.primary : AppColors.background, 
-                  foregroundColor: isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
+                  foregroundColor: isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
                   disabledBackgroundColor: AppColors.background,
-                  disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                  disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -202,7 +202,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       )
                     : Text(
                         'เข้าสู่ระบบ',
-                        style: AppTypography.label2.copyWith(color: isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite),
+                        style: AppTypography.label2.copyWith(color: isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite),
                       ),
               ),
               const SizedBox(height: 16),

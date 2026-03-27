@@ -60,6 +60,7 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
     final menuState = ref.watch(menuProvider);
 
     return Dialog(
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -69,23 +70,28 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('เพิ่มรายการเมนูใหม่', style: AppTypography.heading6),
+              Text('เพิ่มรายการเมนูใหม่', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
               const SizedBox(height: 24),
 
               // Category Dropdown
               menuState.maybeWhen(
                 data: (categories) {
                   if (categories.isEmpty) {
-                    return const Text('ไม่มีหมวดหมู่ กรุณาเพิ่มหมวดหมู่ก่อน', style: TextStyle(color: AppColors.error));
+                    return Text('ไม่มีหมวดหมู่ กรุณาเพิ่มหมวดหมู่ก่อน', style: AppTypography.body2.copyWith(color: AppColors.semanticErrorFgHigh));
                   }
                   // Auto-select first category if none selected
                   _selectedCategoryId ??= categories.first.id;
                   
                   return DropdownButtonFormField<String>(
                     value: _selectedCategoryId,
+                    dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                    style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                     decoration: const InputDecoration(labelText: 'หมวดหมู่'),
                     items: categories.map((cat) {
-                      return DropdownMenuItem(value: cat.id, child: Text(cat.name));
+                      return DropdownMenuItem(
+                        value: cat.id, 
+                        child: Text(cat.name, style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                      );
                     }).toList(),
                     onChanged: (val) {
                       setState(() => _selectedCategoryId = val);
@@ -98,6 +104,7 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
 
               TextFormField(
                 controller: _nameController,
+                style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                 decoration: const InputDecoration(labelText: 'ชื่อเมนู'),
                 validator: (val) => val == null || val.isEmpty ? 'กรุณากรอกชื่อเมนู' : null,
               ),
@@ -105,6 +112,7 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
               
               TextFormField(
                 controller: _priceController,
+                style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                 decoration: const InputDecoration(labelText: 'ราคา (บาท)'),
                 keyboardType: TextInputType.number,
                 validator: (val) {
@@ -117,6 +125,7 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
               
               TextFormField(
                 controller: _descController,
+                style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                 decoration: const InputDecoration(labelText: 'คำอธิบาย (เผื่อเลือก)'),
                 maxLines: 2,
               ),
@@ -127,14 +136,18 @@ class _AddMenuItemDialogState extends ConsumerState<AddMenuItemDialog> {
                 children: [
                   TextButton(
                     onPressed: _isLoading ? null : () => Navigator.pop(context, false),
-                    child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                    child: Text('ยกเลิก', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
                   ),
                   const SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.semanticSuccessBgHigh,
+                      foregroundColor: Colors.white,
+                    ),
                     child: _isLoading 
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                      : const Text('เพิ่มเมนู'),
+                      : Text('เพิ่มเมนู', style: AppTypography.label2.copyWith(color: Colors.white)),
                   ),
                 ],
               ),

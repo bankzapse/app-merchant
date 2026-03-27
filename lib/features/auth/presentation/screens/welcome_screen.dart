@@ -94,7 +94,7 @@ class WelcomeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(24),
                             ),
                           ),
-                          child: Text('เข้าสู่ระบบ', style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgWhite)),
+                          child: Text('เข้าสู่ระบบ', style: AppTypography.label2.copyWith(color: Colors.white)),
                         ),
                       ),
                     ],

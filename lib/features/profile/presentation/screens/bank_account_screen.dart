@@ -20,19 +20,20 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('ระบุจำนวนเงินที่ต้องการถอน', style: AppTypography.heading6),
+          backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+          title: Text('ระบุจำนวนเงินที่ต้องการถอน', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
+            style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
             decoration: const InputDecoration(
               labelText: 'จำนวนเงิน (บาท)',
-              border: OutlineInputBorder(),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('ยกเลิก', style: TextStyle(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+              child: Text('ยกเลิก', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -46,7 +47,8 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   );
                 }
               },
-              child: const Text('ยืนยัน'),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.semanticSuccessBgHigh),
+              child: Text('ยืนยัน', style: AppTypography.label2.copyWith(color: Colors.white)),
             ),
           ],
         );
@@ -67,11 +69,12 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
+          backgroundColor: AppColors.semanticGrayNeutralBgWhite,
           title: const Icon(Icons.check_circle, color: AppColors.success, size: 64),
           content: Text(
             'ส่งคำขอถอนเงินจำนวน ฿${amount.toStringAsFixed(2)} สำเร็จ\n\nระบบจะโอนเข้าบัญชีของคุณภายใน 1-2 วันทำการ',
             textAlign: TextAlign.center,
-            style: AppTypography.body2,
+            style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
           ),
           actions: [
             SizedBox(
@@ -81,7 +84,8 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   Navigator.pop(context); // Close dialog
                   Navigator.pop(context); // Go back to profile
                 },
-                child: const Text('ตกลง', style: TextStyle(fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.semanticSuccessBgHigh),
+                child: Text('ตกลง', style: AppTypography.label1.copyWith(color: Colors.white)),
               ),
             ),
           ],
@@ -104,6 +108,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('บัญชีธนาคาร', style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+        iconTheme: const IconThemeData(color: AppColors.semanticGrayNeutralFgHigh),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -112,7 +117,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
+                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -132,11 +137,11 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('ยอดเงินที่ถอนได้', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                        Text('ยอดเงินที่ถอนได้', style: AppTypography.body1.copyWith(color: Colors.white.withOpacity(0.7))),
                         const SizedBox(height: 8),
                         Text(
                           '฿${_currentBalance.toStringAsFixed(2)}',
-                          style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
+                          style: AppTypography.heading1.copyWith(color: Colors.white),
                         ),
                       ],
                     ),
@@ -145,15 +150,19 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   Text('บัญชีรับเงินของคุณ', style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                   const SizedBox(height: 16),
                   Card(
-                    color: AppColors.surface,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray)),
+                    color: AppColors.semanticGrayNeutralBgWhite,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray),
+                    ),
                     child: ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(8)),
-                        child: Icon(Icons.account_balance, color: Colors.purple.shade400),
+                        decoration: BoxDecoration(color: AppColors.semanticGrayNeutralBgLightGray, borderRadius: BorderRadius.circular(8)),
+                        child: const Icon(Icons.account_balance, color: AppColors.primary),
                       ),
-                      title: Text('ธนาคารไทยพาณิชย์ (SCB)', style: AppTypography.body1.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
+                      title: Text('ธนาคารไทยพาณิชย์ (SCB)', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
                       subtitle: Text('***-***-1234\nนาย สมชาย เข็มกลัด', style: AppTypography.body3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                       isThreeLine: true,
                     ),
@@ -167,10 +176,11 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
           child: ElevatedButton(
             onPressed: _isLoading ? null : _showWithdrawDialog,
             style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.semanticSuccessBgHigh,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: const Text('ถอนเงินเลย', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: Text('ถอนเงินเลย', style: AppTypography.label1.copyWith(color: Colors.white)),
           ),
         ),
       ),

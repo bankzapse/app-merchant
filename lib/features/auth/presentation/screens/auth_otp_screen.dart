@@ -70,12 +70,12 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -85,7 +85,7 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -155,7 +155,7 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
                 child: Text(
                   _secondsRemaining > 0 ? 'ส่งใหม่ใน ${_formatTime(_secondsRemaining)}' : 'ส่งรหัส OTP ใหม่',
                   style: AppTypography.caption5.copyWith(
-                    color: _secondsRemaining > 0 ? AppColors.semanticGrayNeutralFgLowOnWhite : AppColors.primary,
+                    color: _secondsRemaining > 0 ? AppColors.semanticGrayNeutralFgMidOnWhite : AppColors.primary,
                     fontWeight: _secondsRemaining > 0 ? FontWeight.normal : FontWeight.bold,
                   ),
                 ),

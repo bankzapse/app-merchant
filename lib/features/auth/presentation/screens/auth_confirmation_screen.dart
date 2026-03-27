@@ -63,12 +63,12 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -78,7 +78,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -89,7 +89,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.semanticGrayNeutralBorderLightGray,
+              color: AppColors.semanticGrayNeutralBgLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -124,13 +124,13 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                         });
                       },
                       richText: [
-                        TextSpan(text: 'ข้อตกลงการใช้งาน Mass', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'ข้อตกลงการใช้งาน Mass', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ', '),
-                        TextSpan(text: 'ข้อกำหนดและ\nเงื่อนไขร้านค้า (ข้อกำหนดและเงื่อนไข\nMassFood)', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'ข้อกำหนดและ\nเงื่อนไขร้านค้า (ข้อกำหนดและเงื่อนไข\nMassFood)', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ', '),
-                         TextSpan(text: 'ความยินยอมรับข้อตกลง', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                         TextSpan(text: 'ความยินยอมรับข้อตกลง', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ',\n'),
-                        TextSpan(text: 'นโยบายสินค้า', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'นโยบายสินค้า', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                          const TextSpan(text: ', '),
                         TextSpan(text: 'ประกาศความเป็นส่วนตัวของ\nMass', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                       ]
@@ -146,9 +146,9 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                       },
                        richText: [
                         const TextSpan(text: 'ตกลงเข้าร่วมทดลองใช้ฟรีแคมเปญร้านเล็ก\nลดทั้งร้าน (ตกลงยอมรับ'),
-                        TextSpan(text: 'เงื่อนไขระยะเวลา\nยกเว้นค่าธรรมเนียมแคมเปญ "ร้านเล็กลดทั้ง\nร้าน"', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'เงื่อนไขระยะเวลา\nยกเว้นค่าธรรมเนียมแคมเปญ "ร้านเล็กลดทั้ง\nร้าน"', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ' และ '),
-                        TextSpan(text: 'ข้อกำหนดของการให้บริการ Mass\nMarketing Services', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'ข้อกำหนดของการให้บริการ Mass\nMarketing Services', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ')'),
                       ]
                     ),
@@ -163,7 +163,7 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                       },
                       richText: [
                         const TextSpan(text: 'การส่ง'),
-                        TextSpan(text: 'ข้อมูลการตลาด', style: TextStyle(color: AppColors.semanticSecondaryFgHigh)),
+                        TextSpan(text: 'ข้อมูลการตลาด', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
                         const TextSpan(text: ' เช่น แนวทางปฏิบัติที่\nดีที่สุด ข้อมูลเชิงลึก และโปรโมชันเพื่อช่วย\nเพิ่มยอดขาย'),
                       ]
                     ),
@@ -205,17 +205,17 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
                     context.go('/');
                   } : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                    disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                    backgroundColor: _isInputValid ? AppColors.semanticSuccessBgHigh : AppColors.semanticGrayNeutralBgLightGray,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('ส่ง', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                  child: Text('ส่ง', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),

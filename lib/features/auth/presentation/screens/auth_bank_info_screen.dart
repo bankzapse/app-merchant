@@ -47,7 +47,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
           text: label,
           style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
           children: isRequired
-              ? [const TextSpan(text: ' *', style: TextStyle(color: AppColors.error))]
+              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
               : [],
         ),
       ),
@@ -57,12 +57,12 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -72,7 +72,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -83,7 +83,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.semanticGrayNeutralBorderLightGray,
+              color: AppColors.semanticGrayNeutralBgLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -116,6 +116,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     _buildTextFieldLabel('เจ้าของบัญชี'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -124,7 +125,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'ชื่อ-นามสกุล',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -133,18 +134,20 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     ),
                     const SizedBox(height: 16),
                     _buildTextFieldLabel('ชื่อธนาคาร'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
+                     Container(
+                       padding: const EdgeInsets.symmetric(horizontal: 16),
+                       decoration: BoxDecoration(
+                         color: AppColors.semanticGrayNeutralBgLightGray,
+                         borderRadius: BorderRadius.circular(12),
+                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
+                       ),
+                       child: DropdownButtonHideUnderline(
+                         child: DropdownButton<String>(
                           value: _selectedBank,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['กสิกรไทย', 'ไทยพาณิชย์', 'กรุงไทย'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -164,6 +167,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     _buildTextFieldLabel('เลขบัญชี'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -173,7 +177,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: '8888888888',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -188,20 +192,20 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'Mass จำเป็นต้องขอบัญชีธนาคาร เพื่อยืนยันข้อมูลธนาคาร\nและดำเนินการธุรกรรมการเงินกับคุณ',
-                      style: AppTypography.caption3.copyWith(color: Colors.black54),
+                      style: AppTypography.caption3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                     ),
                     const SizedBox(height: 16),
                     // Image picker representation 1
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid), // Should be dashed in real app
+                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.add, color: AppColors.textPrimary),
+                          const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -211,8 +215,8 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                                   text: TextSpan(
                                     text: 'รูปถ่ายสมุดบัญชีธนาคาร',
                                     style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                                    children: const [
-                                      TextSpan(text: ' *', style: TextStyle(color: AppColors.error)),
+                                    children: [
+                                      TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
                                     ],
                                   ),
                                 ),
@@ -228,9 +232,9 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryLight.withValues(alpha: 0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primaryLight, width: 0.5),
+                        border: Border.all(color: AppColors.primary, width: 0.5),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,13 +267,13 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: AppColors.semanticGrayNeutralBgLightGray,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid), // Should be dashed
+                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
                         ),
                         child: Column(
                           children: [
-                            const Icon(Icons.add, color: AppColors.textPrimary),
+                            const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
                             const SizedBox(height: 8),
                             Text('เพิ่มไฟล์', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh))
                           ],
@@ -322,7 +326,7 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                      Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.textPrimary, size: 20),
+                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: RichText(
@@ -354,17 +358,17 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
                     context.push('/register/confirmation');
                   } : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                    disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),

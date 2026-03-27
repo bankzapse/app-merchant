@@ -34,12 +34,12 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -49,7 +49,7 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -75,14 +75,14 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: AppColors.semanticGrayNeutralBgLightGray,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
                         Text('+66', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                         const SizedBox(width: 8),
-                        const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary, size: 20),
+                        const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite, size: 20),
                       ],
                     ),
                   ),
@@ -103,13 +103,13 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: '81 123 4567',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           counterText: '',
                           suffixIcon: _phoneController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.cancel, color: AppColors.semanticGrayNeutralFgLowOnWhite, size: 20),
+                                  icon: const Icon(Icons.cancel, color: AppColors.semanticGrayNeutralFgMidOnWhite, size: 20),
                                   onPressed: () {
                                     _phoneController.clear();
                                   },
@@ -127,17 +127,17 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                   context.push('/register/otp');
                 } : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                  foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                  disabledBackgroundColor: AppColors.background,
-                  disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                  backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
+                  foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                  disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                  disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
                 ),
-                child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
               ),
             ],
           ),

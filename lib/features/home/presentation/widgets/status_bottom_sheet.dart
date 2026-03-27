@@ -1,0 +1,251 @@
+import 'package:flutter/material.dart';
+import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
+import 'package:merchant_app/features/profile/presentation/screens/opening_hours_screen.dart';
+
+class StatusBottomSheet extends StatefulWidget {
+  final RestaurantStatus currentStatus;
+  final ValueChanged<RestaurantStatus> onStatusChanged;
+
+  const StatusBottomSheet({
+    super.key,
+    required this.currentStatus,
+    required this.onStatusChanged,
+  });
+
+  @override
+  State<StatusBottomSheet> createState() => _StatusBottomSheetState();
+}
+
+class _StatusBottomSheetState extends State<StatusBottomSheet> {
+  late RestaurantStatus _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.currentStatus;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFDDDDDD),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'ตั้งสถานะร้าน',
+            style: AppTypography.heading5.copyWith(
+              color: const Color(0xFF111111),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Options
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFEEEEEE)),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                _buildOption(
+                  status: RestaurantStatus.open,
+                  color: const Color(0xFF2ECC71),
+                  label: 'เปิดให้บริการ',
+                  subtitle: null,
+                ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                _buildOption(
+                  status: RestaurantStatus.busy,
+                  color: const Color(0xFFF39C12),
+                  label: 'ยุ่ง',
+                  subtitle: 'ปรับเวลาเตรียมคำสั่งซื้อ',
+                ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                _buildOption(
+                  status: RestaurantStatus.paused,
+                  color: const Color(0xFFE74C3C),
+                  label: 'หยุดชั่วคราว',
+                  subtitle: 'เปลี่ยนสถานะร้านของคุณ เพื่อกลับมารับคำสั่งซื้อต่อ',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  'ร้านเปลี่ยนแปลงเวลาทำการ?',
+                  style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const OpeningHoursScreen()),
+                    );
+                  },
+                  child: Text(
+                    'อัปเดตเวลาทำการ',
+                    style: AppTypography.label3.copyWith(color: const Color(0xFF0066CC)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _selected != widget.currentStatus
+                  ? () {
+                      widget.onStatusChanged(_selected);
+                      Navigator.pop(context);
+
+                      // Show confirmation dialog when turning back to open from paused
+                      if (_selected == RestaurantStatus.open &&
+                          widget.currentStatus == RestaurantStatus.paused) {
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (context.mounted) {
+                            _showConfirmResumeDialog(context);
+                          }
+                        });
+                      }
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00B14F),
+                disabledBackgroundColor: const Color(0xFFCCCCCC),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text(
+                'ยืนยัน',
+                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOption({
+    required RestaurantStatus status,
+    required Color color,
+    required String label,
+    String? subtitle,
+  }) {
+    final isSelected = _selected == status;
+    return InkWell(
+      onTap: () => setState(() => _selected = status),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTypography.body1.copyWith(
+                      color: const Color(0xFF111111),
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle,
+                      style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                    ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: Color(0xFF00B14F), size: 22),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showConfirmResumeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'พร้อมกลับมารับคำสั่งซื้อ?',
+          style: AppTypography.heading5.copyWith(
+            color: const Color(0xFF111111),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'โปรดตรวจสอบและยืนยันเวลาทำการร้าน\nเพื่อเตรียมรับคำสั่งซื้อที่จะเข้ามา',
+          style: AppTypography.body2.copyWith(color: const Color(0xFF555555)),
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(ctx),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00B14F),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text(
+                'ยืนยันเวลาทำการร้าน',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                'ยกเลิก',
+                style: AppTypography.label2.copyWith(color: const Color(0xFF888888)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

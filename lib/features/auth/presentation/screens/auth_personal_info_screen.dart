@@ -63,7 +63,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
           text: label,
           style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
           children: isRequired
-              ? [const TextSpan(text: ' *', style: TextStyle(color: AppColors.error))]
+              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
               : [],
         ),
       ),
@@ -73,12 +73,12 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -88,7 +88,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -99,7 +99,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.semanticGrayNeutralBorderLightGray,
+              color: AppColors.semanticGrayNeutralBgLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -133,15 +133,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedNationality,
-                          hint: Text('Thailand', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('Thailand', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['Thailand', 'Other'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -162,21 +164,21 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 24),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.add, color: AppColors.textPrimary),
+                          const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
                           const SizedBox(width: 12),
                           RichText(
                             text: TextSpan(
                               text: 'บัตรประชาชน',
                               style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                              children: const [
-                                TextSpan(text: ' *', style: TextStyle(color: AppColors.error)),
+                              children: [
+                                TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
                               ],
                             ),
                           ),
@@ -192,6 +194,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     _buildTextFieldLabel('เลขประจำตัวประชาชนหรือเลขที่หนังสือเดินทาง'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -201,7 +204,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'ตัวอย่าง: 1500000000000',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -212,15 +215,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedTitle,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['นาย', 'นาง', 'นางสาว'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -240,6 +245,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     _buildTextFieldLabel('ชื่อ-นามสกุลเจ้าของร้าน'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -248,7 +254,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'ตัวอย่าง: สมหญิง ใจงาม',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -259,9 +265,9 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryLight.withValues(alpha: 0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primaryLight, width: 0.5),
+                        border: Border.all(color: AppColors.primary, width: 0.5),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,13 +287,13 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     _buildTextFieldLabel('วัน/เดือน/ปีเกิด (ปีค.ศ.)'),
                     Container(
                       decoration: BoxDecoration(
+                         color: AppColors.semanticGrayNeutralBgLightGray,
                          borderRadius: BorderRadius.circular(12),
                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                        ),
                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                        child: InkWell(
                         onTap: () {
-                          // TODO: Show Date Picker
                           setState(() {
                              _selectedBirthDate = '1990/01/01';
                              _validateInput();
@@ -295,16 +301,16 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         },
                          child: Row(
                            children: [
-                             const Icon(Icons.calendar_today, color: AppColors.textPrimary),
+                             const Icon(Icons.calendar_today, color: AppColors.semanticGrayNeutralFgHigh),
                              const SizedBox(width: 12),
                              Text(
                                _selectedBirthDate ?? 'เลือก',
                                style: AppTypography.body2.copyWith(
-                                 color: _selectedBirthDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgLowOnWhite
+                                 color: _selectedBirthDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgMidOnWhite
                                ),
                              ),
                              const Spacer(),
-                             const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                             const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                            ],
                          ),
                        ),
@@ -313,13 +319,13 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                      _buildTextFieldLabel('วันหมดอายุบัตรประชาชน'),
                     Container(
                       decoration: BoxDecoration(
+                         color: AppColors.semanticGrayNeutralBgLightGray,
                          borderRadius: BorderRadius.circular(12),
                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                        ),
                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                        child: InkWell(
                         onTap: () {
-                          // TODO: Show Date Picker
                           setState(() {
                              _selectedExpiryDate = '2030/12/31';
                              _validateInput();
@@ -327,16 +333,16 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         },
                          child: Row(
                            children: [
-                             const Icon(Icons.calendar_today, color: AppColors.textPrimary),
+                             const Icon(Icons.calendar_today, color: AppColors.semanticGrayNeutralFgHigh),
                              const SizedBox(width: 12),
                              Text(
                                _selectedExpiryDate ?? 'เลือก',
                                style: AppTypography.body2.copyWith(
-                                 color: _selectedExpiryDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgLowOnWhite
+                                 color: _selectedExpiryDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgMidOnWhite
                                ),
                              ),
                              const Spacer(),
-                             const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                             const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                            ],
                          ),
                        ),
@@ -345,6 +351,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     _buildTextFieldLabel('ที่อยู่'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -354,7 +361,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'กรอกรายละเอียดตามบัตรประชาชน โดยไม่ต้องระบุตำบล อำเภอ และ จังหวัด',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -366,15 +373,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedProvince,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['กรุงเทพมหานคร', 'เชียงใหม่', 'ภูเก็ต'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -395,15 +404,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedDistrict,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['คลองสาน', 'บางรัก', 'ปทุมวัน'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -424,15 +435,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedSubdistrict,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['คลองต้นไทร', 'บางลำภูล่าง', 'สมเด็จเจ้าพระยา'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -452,6 +465,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     _buildTextFieldLabel('รหัสไปรษณีย์'),
                     Container(
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
@@ -461,7 +475,7 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                         decoration: InputDecoration(
                           hintText: 'เช่น 10600',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
@@ -470,13 +484,13 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     ),
                      Padding(
                        padding: const EdgeInsets.only(top: 8.0),
-                       child: Text('กรอกรหัสไปรษณีย์ 5 หลัก', style: AppTypography.caption3.copyWith(color: Colors.black54)),
+                       child: Text('กรอกรหัสไปรษณีย์ 5 หลัก', style: AppTypography.caption3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                      ),
                     const SizedBox(height: 32),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.textPrimary, size: 20),
+                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: RichText(
@@ -508,17 +522,17 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
                     context.push('/register/bank_info');
                   } : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                    disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),

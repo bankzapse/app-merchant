@@ -29,7 +29,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
           text: label,
           style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
           children: isRequired
-              ? [const TextSpan(text: ' *', style: TextStyle(color: AppColors.error))]
+              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
               : [],
         ),
       ),
@@ -39,12 +39,12 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -54,7 +54,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textPrimary),
+            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
             onPressed: () {},
           ),
         ],
@@ -65,7 +65,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
             Container(
               height: 4,
               width: double.infinity,
-              color: AppColors.semanticGrayNeutralBorderLightGray,
+              color: AppColors.semanticGrayNeutralBgLightGray,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -99,15 +99,17 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        color: AppColors.semanticGrayNeutralBgLightGray,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedBusinessType,
-                          hint: Text('เลือกประเภทธุรกิจ', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite)),
+                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
+                          hint: Text('เลือกประเภทธุรกิจ', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
                           items: <String>['ธุรกิจส่วนตัว', 'ห้างหุ้นส่วนจำกัด', 'บริษัทจำกัด'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -160,7 +162,7 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.textPrimary, size: 20),
+                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: RichText(
@@ -192,17 +194,17 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
                      context.push('/register/personal_info');
                   } : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.background,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgLowOnWhite,
-                    disabledBackgroundColor: AppColors.background,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgLowOnWhite,
+                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
+                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
+                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
+                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? AppColors.semanticGrayNeutralFgWhite : AppColors.semanticGrayNeutralFgLowOnWhite)),
+                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),
