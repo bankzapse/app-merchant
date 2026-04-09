@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
 
 class AuthPhoneScreen extends StatefulWidget {
-  const AuthPhoneScreen({super.key});
+  final String flow;
+
+  const AuthPhoneScreen({super.key, this.flow = 'login'});
 
   @override
   State<AuthPhoneScreen> createState() => _AuthPhoneScreenState();
@@ -33,116 +37,227 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLogin = widget.flow == 'login';
+
     return Scaffold(
       backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 2 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (!isLogin) ...[
+                const AuthStepIndicator(currentStep: 1),
+                const SizedBox(height: 32),
+              ] else ...[
+                const SizedBox(height: 20),
+              ],
+              // Header Section
               Text(
-                'โปรดระบุเบอร์โทรศัพท์ของคุณ',
-                style: AppTypography.heading4.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                isLogin ? 'เข้าสู่ระบบ' : 'เริ่มสร้างร้านค้าของคุณ',
+                style: AppTypography.heading3.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
-                'ลงทะเบียนด้วยเบอร์โทรศัพท์เพื่อเริ่มต้นใช้งาน\nMass Merchant',
-                style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
+                isLogin
+                    ? 'ยินดีต้อนรับกลับมา! กรุณาระบุเบอร์โทรศัพท์เพื่อดำเนินการต่อ'
+                    : 'ระบุเบอร์โทรศัพท์ของคุณเพื่อเริ่มต้นการสมัครสมาชิก Just Merchant',
+                style: AppTypography.body2.copyWith(
+                  color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                  height: 1.5,
+                ),
               ),
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: AppColors.semanticGrayNeutralBgLightGray,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Text('+66', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite, size: 20),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: _phoneController.text.isNotEmpty ? AppColors.primary : AppColors.semanticGrayNeutralBorderLightGray,
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        maxLength: 10,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: '81 123 4567',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          counterText: '',
-                          suffixIcon: _phoneController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.cancel, color: AppColors.semanticGrayNeutralFgMidOnWhite, size: 20),
-                                  onPressed: () {
-                                    _phoneController.clear();
-                                  },
-                                )
-                              : null,
-                        ),
+              const SizedBox(height: 40),
+
+              // Input Card
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: AppTheme.premiumCardDecoration,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'เบอร์โทรศัพท์',
+                      style: AppTypography.label2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      maxLength: 10,
+                      style: AppTypography.label2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                      ),
+                      cursorColor: AppColors.primary,
+                      decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '+66',
+                                style: AppTypography.label2.copyWith(
+                                  color:
+                                      AppColors.semanticGrayNeutralFgLowOnWhite,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 1,
+                                height: 24,
+                                color: const Color(0xFFE2E8F0),
+                              ),
+                            ],
+                          ),
+                        ),
+                        hintText: '00 000 0000',
+                        hintStyle: AppTypography.label2.copyWith(
+                          color: const Color(0xFFE2E8F0),
+                        ),
+                        counterText: '',
+                        filled: true,
+                        fillColor: const Color(0xFFF8FAFC),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: _isInputValid ? () {
-                  context.push('/register/otp');
-                } : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
-                  foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                  disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                  disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+
+              const SizedBox(height: 48),
+
+              // Action Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isInputValid ? _requestOtp : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
+                  ),
+                  child: Text(
+                    'รับรหัส OTP',
+                    style: AppTypography.label1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                child: Text('ต่อไป', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
               ),
+
+              const SizedBox(height: 32),
+
+              // Footer Links
+              if (isLogin) ...[
+                Center(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => context.push('/register/phone'),
+                        child: RichText(
+                          text: TextSpan(
+                            style: AppTypography.body2.copyWith(
+                              color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                            ),
+                            children: [
+                              const TextSpan(text: 'ยังไม่มีบัญชี? '),
+                              TextSpan(
+                                text: 'สมัครสมาชิก',
+                                style: AppTypography.body2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton.icon(
+                        onPressed: () => context.push('/login/email'),
+                        icon: const Icon(
+                          Icons.email_outlined,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                        label: Text(
+                          'เข้าสู่ระบบด้วยอีเมล',
+                          style: AppTypography.label2.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          foregroundColor:
+                              AppColors.semanticGrayNeutralFgMidOnWhite,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
+                Center(
+                  child: GestureDetector(
+                    onTap: () => context.push('/login/phone'),
+                    child: RichText(
+                      text: TextSpan(
+                        style: AppTypography.body2.copyWith(
+                          color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                        ),
+                        children: [
+                          const TextSpan(text: 'มีบัญชีอยู่แล้ว? '),
+                          TextSpan(
+                            text: 'เข้าสู่ระบบ',
+                            style: AppTypography.body2.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _requestOtp() {
+    if (_isInputValid) {
+      if (widget.flow == 'login') {
+        context.push('/login/otp');
+      } else {
+        context.push('/register/otp');
+      }
+    }
   }
 }

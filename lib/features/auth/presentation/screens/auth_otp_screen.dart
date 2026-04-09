@@ -6,7 +6,8 @@ import 'package:merchant_app/core/theme/app_typography.dart';
 import 'dart:async';
 
 class AuthOtpScreen extends StatefulWidget {
-  const AuthOtpScreen({super.key});
+  final String flow;
+  const AuthOtpScreen({super.key, this.flow = 'register'});
 
   @override
   State<AuthOtpScreen> createState() => _AuthOtpScreenState();
@@ -62,8 +63,11 @@ class _AuthOtpScreenState extends State<AuthOtpScreen> {
   void _onInputComplete() {
     String otp = _controllers.map((c) => c.text).join();
     if (otp.length == 4) {
-       // Validate and redirect to next screen
-       context.push('/register/email_password');
+       if (widget.flow == 'login') {
+         context.go('/');
+       } else {
+         context.push('/register/email_password?flow=register');
+       }
     }
   }
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/home/presentation/widgets/status_bottom_sheet.dart';
+import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
 import 'package:merchant_app/features/orders/models/order.dart';
 import 'package:merchant_app/features/orders/providers/order_provider.dart';
-import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
-import 'package:merchant_app/features/home/presentation/widgets/status_bottom_sheet.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -53,62 +55,95 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
-      body: Column(
-        children: [
-          // ─── Header ─────────────────────────────────────────
-          _buildHeader(context, ref, statusLabel, isOpen, profileAsync),
-          // ─── Tabs ───────────────────────────────────────────
-          Container(
-            color: Colors.white,
-            child: TabBar(
-              controller: _tabController,
-              labelColor: const Color(0xFF00B14F),
-              unselectedLabelColor: const Color(0xFF888888),
-              indicatorColor: const Color(0xFF00B14F),
-              indicatorWeight: 2,
-              labelStyle: AppTypography.label3.copyWith(fontWeight: FontWeight.w600),
-              unselectedLabelStyle: AppTypography.label3,
-              tabs: const [
-                Tab(text: 'กำลังเตรียม'),
-                Tab(text: 'พร้อมจัดส่ง'),
-                Tab(text: 'ที่กำลังจะถึง'),
-                Tab(text: 'ประวัติ'),
-              ],
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ─── Header ─────────────────────────────────────────
+            _buildHeader(context, ref, statusLabel, isOpen, profileAsync),
+            // ─── Tabs ───────────────────────────────────────────
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: AppColors.primary,
+                unselectedLabelColor: const Color(0xFF94A3B8),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: AppColors.primary.withOpacity(0.1),
+                ),
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                splashFactory: NoSplash.splashFactory,
+                dividerColor: Colors.transparent,
+                labelStyle: AppTypography.label2.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelStyle: AppTypography.label3,
+                tabs: const [
+                  Tab(text: 'กำลังเตรียม'),
+                  Tab(text: 'พร้อมจัดส่ง'),
+                  Tab(text: 'กำลังจัดส่ง'),
+                  Tab(text: 'ประวัติ'),
+                ],
+              ),
             ),
-          ),
-          const Divider(height: 1, color: Color(0xFFEEEEEE)),
-          Expanded(
-            child: orderState.isLoading
-                ? const Center(child: CircularProgressIndicator(color: Color(0xFF00B14F)))
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildOrderList(orderState.preparing, tab: 0),
-                      _buildOrderList(orderState.ready, tab: 1),
-                      _buildOrderList(orderState.delivering, tab: 2),
-                      _buildOrderList(orderState.history, tab: 3),
-                    ],
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
-          ),
-        ],
+                ],
+              ),
+            ),
+            Expanded(
+              child: orderState.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    )
+                  : TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildOrderList(orderState.preparing, tab: 0),
+                        _buildOrderList(orderState.ready, tab: 1),
+                        _buildOrderList(orderState.delivering, tab: 2),
+                        _buildOrderList(orderState.history, tab: 3),
+                      ],
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, WidgetRef ref, String statusLabel, bool isOpen,
-      AsyncValue<RestaurantProfile> profileAsync) {
+  Widget _buildHeader(
+    BuildContext context,
+    WidgetRef ref,
+    String statusLabel,
+    bool isOpen,
+    AsyncValue<RestaurantProfile> profileAsync,
+  ) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'คำสั่งซื้อ',
             style: AppTypography.heading4.copyWith(
-              color: const Color(0xFF111111),
-              fontWeight: FontWeight.bold,
+              color: AppColors.semanticGrayNeutralFgHigh,
+              fontWeight: FontWeight.w900,
             ),
           ),
           Row(
@@ -122,16 +157,34 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
                     backgroundColor: Colors.transparent,
                     builder: (_) => StatusBottomSheet(
                       currentStatus: profile.status,
-                      onStatusChanged: (s) =>
-                          ref.read(restaurantProfileProvider.notifier).setStatus(s),
+                      onStatusChanged: (s) => ref
+                          .read(restaurantProfileProvider.notifier)
+                          .setStatus(s),
                     ),
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFCCCCCC)),
+                    color: isOpen ? Colors.white : const Color(0xFFF1F5F9),
+                    border: Border.all(
+                      color: isOpen
+                          ? AppColors.primary.withOpacity(0.5)
+                          : const Color(0xFFE2E8F0),
+                    ),
                     borderRadius: BorderRadius.circular(20),
+                    boxShadow: isOpen
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primary.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Row(
                     children: [
@@ -139,24 +192,39 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: isOpen ? const Color(0xFF00B14F) : const Color(0xFF888888),
+                          color: isOpen
+                              ? AppColors.primary
+                              : const Color(0xFF94A3B8),
                           shape: BoxShape.circle,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       Text(
                         statusLabel,
-                        style: AppTypography.body3.copyWith(
-                          color: const Color(0xFF333333),
-                          fontWeight: FontWeight.w500,
+                        style: AppTypography.label3.copyWith(
+                          color: isOpen
+                              ? AppColors.primary
+                              : const Color(0xFF475569),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              const Icon(Icons.more_vert, color: Color(0xFF555555)),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: const Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                  color: Color(0xFF475569),
+                ),
+              ),
             ],
           ),
         ],
@@ -166,16 +234,14 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   Widget _buildOrderList(List<Order> orders, {required int tab}) {
     if (orders.isEmpty) {
-      return tab == 0
-          ? _buildEmptyPreparingState()
-          : _buildEmptyState(tab);
+      return tab == 0 ? _buildEmptyPreparingState() : _buildEmptyState(tab);
     }
 
     return RefreshIndicator(
-      color: const Color(0xFF00B14F),
+      color: AppColors.primary,
       onRefresh: () => ref.read(orderProvider.notifier).fetchOrders(),
       child: ListView.builder(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         itemCount: orders.length,
         itemBuilder: (_, i) => _buildOrderCard(orders[i]),
       ),
@@ -184,60 +250,82 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   Widget _buildEmptyPreparingState() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          const SizedBox(height: 12),
-          Text(
-            'ยังไม่มีคำสั่งซื้อใหม่ในตอนนี้',
-            style: AppTypography.body2.copyWith(color: const Color(0xFF888888)),
-          ),
           const SizedBox(height: 20),
-          // Tips card
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFEEEEEE)),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.1),
+                  blurRadius: 20,
+                  spreadRadius: 10,
+                ),
+              ],
             ),
+            child: const Icon(
+              Icons.receipt_long_outlined,
+              size: 48,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'ยังไม่มีคำสั่งซื้อใหม่ในตอนนี้',
+            style: AppTypography.heading6.copyWith(
+              color: AppColors.semanticGrayNeutralFgHigh,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'เตรียมวัตถุดิบไว้ให้พร้อมสำหรับออเดอร์ถัดไป',
+            style: AppTypography.body3.copyWith(color: const Color(0xFF64748B)),
+          ),
+          const SizedBox(height: 32),
+          // Tips card
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: AppTheme.premiumCardDecoration,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ระหว่างรอคำสั่งซื้อ...',
-                    style: AppTypography.heading6.copyWith(
-                      color: const Color(0xFF111111),
-                      fontWeight: FontWeight.bold,
-                    )),
-                const SizedBox(height: 12),
-                _buildTipRow('🔄', 'ตรวจสอบความพร้อมจำหน่ายสินค้า', 'เพื่อป้องกันการยกเลิก'),
-                const Divider(height: 16, color: Color(0xFFF0F0F0)),
-                _buildTipRow('⏱️', 'เตรียมให้เสร็จก่อนหมดเวลา', 'เพื่อไม่ให้การจัดส่งคำสั่งซื้อล่าช้า'),
-                const Divider(height: 16, color: Color(0xFFF0F0F0)),
-                _buildTipRow('⭐', 'อ่านฟีดแบกลูกค้า', 'เพื่อนำมาปรับปรุงสินค้าและบริการให้ลูกค้าพอใจมากขึ้น'),
-                const Divider(height: 16, color: Color(0xFFF0F0F0)),
-                _buildTipRow('✨', 'แชทกับผู้ช่วย AI', 'เพื่อหาแนวทางพัฒนาธุรกิจ'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          // KPI card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFEEEEEE)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('ติดตามตัวชี้วัดผลการดำเนินงาน',
-                    style: AppTypography.body2.copyWith(
-                      color: const Color(0xFF111111),
-                      fontWeight: FontWeight.w500,
-                    )),
-                const Icon(Icons.chevron_right, color: Color(0xFF888888)),
+                Text(
+                  'ระหว่างรอคำสั่งซื้อ...',
+                  style: AppTypography.heading6.copyWith(
+                    color: AppColors.semanticGrayNeutralFgHigh,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildTipRow(
+                  '🔄',
+                  'ตรวจสอบความพร้อมจำหน่ายสินค้า',
+                  'เพื่อป้องกันการยกเลิก',
+                ),
+                const Divider(height: 24, color: Color(0xFFF1F5F9)),
+                _buildTipRow(
+                  '⏱️',
+                  'เตรียมให้เสร็จก่อนหมดเวลา',
+                  'เพื่อไม่ให้การจัดส่งคำสั่งซื้อล่าช้า',
+                ),
+                const Divider(height: 24, color: Color(0xFFF1F5F9)),
+                _buildTipRow(
+                  '⭐',
+                  'อ่านฟีดแบกลูกค้า',
+                  'เพื่อนำมาปรับปรุงให้ลูกค้าพอใจมากขึ้น',
+                ),
+                const Divider(height: 24, color: Color(0xFFF1F5F9)),
+                _buildTipRow(
+                  '✨',
+                  'แชทกับผู้ช่วย AI',
+                  'เพื่อหาแนวทางพัฒนาธุรกิจ',
+                ),
               ],
             ),
           ),
@@ -249,18 +337,37 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   Widget _buildTipRow(String emoji, String title, String subtitle) {
     return Row(
       children: [
-        Text(emoji, style: const TextStyle(fontSize: 20)),
-        const SizedBox(width: 12),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            color: Color(0xFFF8FAFC),
+            shape: BoxShape.circle,
+          ),
+          child: Text(emoji, style: const TextStyle(fontSize: 20)),
+        ),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: AppTypography.body2.copyWith(color: const Color(0xFF333333))),
-              Text(subtitle, style: AppTypography.body3.copyWith(color: const Color(0xFF888888))),
+              Text(
+                title,
+                style: AppTypography.body2.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: AppTypography.caption5.copyWith(
+                  color: const Color(0xFF64748B),
+                ),
+              ),
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, size: 18, color: Color(0xFF888888)),
+        const Icon(Icons.arrow_forward_ios, size: 12, color: Color(0xFF94A3B8)),
       ],
     );
   }
@@ -270,12 +377,29 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('📋', style: TextStyle(fontSize: 48)),
-          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.inbox_outlined,
+              size: 48,
+              color: Color(0xFF94A3B8),
+            ),
+          ),
+          const SizedBox(height: 24),
           Text(
-            tab == 1 ? 'ยังไม่มีออเดอร์พร้อมจัดส่ง' :
-            tab == 2 ? 'ไม่มีออเดอร์กำลังจัดส่ง' : 'ยังไม่มีประวัติคำสั่งซื้อ',
-            style: AppTypography.body1.copyWith(color: const Color(0xFF888888)),
+            tab == 1
+                ? 'ยังไม่มีออเดอร์พร้อมจัดส่ง'
+                : tab == 2
+                ? 'ไม่มีออเดอร์กำลังจัดส่ง'
+                : 'ยังไม่มีประวัติคำสั่งซื้อ',
+            style: AppTypography.body1.copyWith(
+              color: const Color(0xFF64748B),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -285,100 +409,172 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   Widget _buildOrderCard(Order order) {
     final isPending = order.status == 'PLACED';
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: isPending ? Border.all(color: const Color(0xFFFF8C00), width: 1.5) : Border.all(color: const Color(0xFFEEEEEE)),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isPending
+              ? AppColors.primary.withOpacity(0.5)
+              : const Color(0xFFE2E8F0),
+          width: isPending ? 2 : 1,
+        ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: isPending
+                ? AppColors.primary.withOpacity(0.1)
+                : Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
         children: [
           // ─── Card Header ─────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            decoration: BoxDecoration(
+              color: isPending
+                  ? AppColors.primary.withOpacity(0.02)
+                  : Colors.transparent,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(18),
+              ),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '#${order.shortId}',
-                  style: AppTypography.heading6.copyWith(
-                    color: const Color(0xFF111111),
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    const Icon(Icons.tag, size: 18, color: AppColors.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      order.shortId,
+                      style: AppTypography.heading6.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
                 ),
                 _buildStatusChip(order.status),
               ],
             ),
           ),
+          const Divider(height: 1, color: Color(0xFFF1F5F9)),
 
           // ─── Items ───────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
-              children: order.items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 22,
-                      height: 22,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF00B14F),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${item.quantity}',
-                          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
+              children: order.items
+                  .map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item.name, style: AppTypography.body2.copyWith(color: const Color(0xFF333333))),
-                          if (item.selectedModifiers.isNotEmpty)
-                            Text(
-                              item.selectedModifiers.join(', '),
-                              style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                          Container(
+                            width: 26,
+                            height: 26,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
                             ),
+                            child: Center(
+                              child: Text(
+                                '${item.quantity}',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: AppTypography.body2.copyWith(
+                                    color: AppColors.semanticGrayNeutralFgHigh,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                if (item.selectedModifiers.isNotEmpty) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item.selectedModifiers.join(', '),
+                                    style: AppTypography.caption5.copyWith(
+                                      color: const Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          Text(
+                            '฿${item.subtotal.toStringAsFixed(0)}',
+                            style: AppTypography.body2.copyWith(
+                              color: AppColors.semanticGrayNeutralFgHigh,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Text(
-                      '฿${item.subtotal.toStringAsFixed(0)}',
-                      style: AppTypography.body2.copyWith(color: const Color(0xFF333333)),
-                    ),
-                  ],
-                ),
-              )).toList(),
+                  )
+                  .toList(),
             ),
           ),
 
-          const Divider(height: 16, indent: 14, endIndent: 14, color: Color(0xFFF0F0F0)),
+          const Divider(height: 1, color: Color(0xFFF1F5F9)),
 
           // ─── Totals & Payment ─────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+            padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  _paymentIcon(order.paymentMethod),
-                  style: const TextStyle(fontSize: 14),
-                ),
-                Text(
-                  'รวม ฿${order.totalAmount.toStringAsFixed(0)}',
-                  style: AppTypography.heading6.copyWith(
-                    color: const Color(0xFF111111),
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
                   ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  child: Text(
+                    _paymentIcon(order.paymentMethod),
+                    style: AppTypography.label3.copyWith(
+                      color: const Color(0xFF475569),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'ยอดรวม',
+                      style: AppTypography.caption5.copyWith(
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                    Text(
+                      '฿${order.totalAmount.toStringAsFixed(0)}',
+                      style: AppTypography.heading5.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -387,7 +583,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
           // ─── Action Buttons ────────────────────────────────
           if (_shouldShowActions(order.status))
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: _buildActionButtons(order),
             ),
         ],
@@ -398,17 +594,17 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   Widget _buildStatusChip(String status) {
     final info = _statusInfo(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: info['bg'] as Color,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         info['label'] as String,
         style: TextStyle(
           color: info['text'] as Color,
           fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w800,
         ),
       ),
     );
@@ -417,19 +613,47 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   Map<String, dynamic> _statusInfo(String status) {
     switch (status) {
       case 'PLACED':
-        return {'label': 'ได้รับออเดอร์', 'bg': const Color(0xFFFFF3E0), 'text': const Color(0xFFE65100)};
+        return {
+          'label': 'ได้รับออเดอร์',
+          'bg': AppColors.primary.withOpacity(0.1),
+          'text': AppColors.primary,
+        };
       case 'RESTAURANT_ACCEPTED':
-        return {'label': 'รับแล้ว', 'bg': const Color(0xFFE3F2FD), 'text': const Color(0xFF1565C0)};
+        return {
+          'label': 'รับแล้ว',
+          'bg': const Color(0xFFE0F2FE),
+          'text': const Color(0xFF0284C7),
+        };
       case 'PREPARING':
-        return {'label': 'กำลังเตรียม', 'bg': const Color(0xFFF3E5F5), 'text': const Color(0xFF6A1B9A)};
+        return {
+          'label': 'กำลังเตรียม',
+          'bg': const Color(0xFFF3E8FF),
+          'text': const Color(0xFF7E22CE),
+        };
       case 'READY_FOR_PICKUP':
-        return {'label': 'พร้อมส่ง', 'bg': const Color(0xFFE8F5E9), 'text': const Color(0xFF1B5E20)};
+        return {
+          'label': 'พร้อมส่ง',
+          'bg': const Color(0xFFDCFCE7),
+          'text': const Color(0xFF166534),
+        };
       case 'DELIVERY':
-        return {'label': 'กำลังส่ง', 'bg': const Color(0xFFE0F7FA), 'text': const Color(0xFF006064)};
+        return {
+          'label': 'กำลังส่ง',
+          'bg': const Color(0xFFFEF9C3),
+          'text': const Color(0xFFA16207),
+        };
       case 'COMPLETED':
-        return {'label': 'ส่งเรียบร้อย', 'bg': const Color(0xFFE8F5E9), 'text': const Color(0xFF2E7D32)};
+        return {
+          'label': 'ส่งเรียบร้อย',
+          'bg': const Color(0xFFF1F5F9),
+          'text': const Color(0xFF475569),
+        };
       default:
-        return {'label': status, 'bg': const Color(0xFFEEEEEE), 'text': const Color(0xFF555555)};
+        return {
+          'label': status,
+          'bg': const Color(0xFFF1F5F9),
+          'text': const Color(0xFF64748B),
+        };
     }
   }
 
@@ -446,25 +670,39 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
             child: OutlinedButton(
               onPressed: () => notifier.rejectOrder(order.id),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFFE74C3C),
-                side: const BorderSide(color: Color(0xFFE74C3C)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                foregroundColor: const Color(0xFF64748B),
+                side: const BorderSide(color: Color(0xFFE2E8F0)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child: const Text('ปฏิเสธ', style: TextStyle(fontWeight: FontWeight.w600)),
+              child: const Text(
+                'ปฏิเสธ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
             flex: 2,
             child: ElevatedButton(
               onPressed: () => notifier.acceptOrder(order.id),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00B14F),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                elevation: 0,
               ),
-              child: const Text('รับออเดอร์', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              child: const Text(
+                'รับออเดอร์',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],
@@ -475,11 +713,17 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
         child: ElevatedButton(
           onPressed: () => notifier.markPreparing(order.id),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF00B14F),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            backgroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            elevation: 0,
           ),
-          child: const Text('เริ่มเตรียมอาหาร', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          child: const Text(
+            'เริ่มเตรียมอาหาร',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       );
     } else if (order.status == 'PREPARING') {
@@ -488,11 +732,18 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
         child: ElevatedButton(
           onPressed: () => notifier.markReady(order.id),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF00B14F),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            backgroundColor: const Color(0xFF22C55E),
+            // Keep green for 'ready' as it's a success state
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            elevation: 0,
           ),
-          child: const Text('อาหารเสร็จแล้ว / พร้อมส่ง', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          child: const Text(
+            'เสร็จแล้ว / พร้อมส่ง',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       );
     }
@@ -501,18 +752,25 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   String _paymentIcon(String method) {
     switch (method) {
-      case 'credit_card': return '💳 บัตรเครดิต';
-      case 'grab_pay': return '💚 GrabPay';
-      case 'cash': return '💵 เงินสด';
-      default: return '💵 $method';
+      case 'credit_card':
+        return '💳 บัตรเครดิต';
+      case 'grab_pay':
+        return '📱 จ่ายออนไลน์';
+      case 'cash':
+        return '💵 เงินสด';
+      default:
+        return '💵 $method';
     }
   }
 
   String _statusLabel(RestaurantStatus s) {
     switch (s) {
-      case RestaurantStatus.open: return 'เปิด';
-      case RestaurantStatus.busy: return 'ยุ่ง';
-      case RestaurantStatus.paused: return 'ปิด';
+      case RestaurantStatus.open:
+        return 'เปิด';
+      case RestaurantStatus.busy:
+        return 'ยุ่ง';
+      case RestaurantStatus.paused:
+        return 'ปิด';
     }
   }
 
@@ -521,29 +779,59 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       SnackBar(
         duration: const Duration(seconds: 6),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: const Color(0xFF00B14F),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: AppColors.foundationGreen600,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.all(20),
         content: Row(
           children: [
-            const Text('🛵', style: TextStyle(fontSize: 20)),
-            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Text('🛵', style: TextStyle(fontSize: 20)),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('มีออเดอร์ใหม่เข้ามา!',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(
+                    'มีออเดอร์ใหม่เข้ามา!',
+                    style: AppTypography.label2.copyWith(
+                      color: AppColors.semanticGrayNeutralBgWhite,
+                    ),
+                  ),
                   Text(
                     '${order.items.length} รายการ • ฿${order.totalAmount.toStringAsFixed(0)}',
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    style: AppTypography.caption4.copyWith(
+                      color: AppColors.semanticGrayNeutralBgWhite,
+                    ),
                   ),
                 ],
               ),
             ),
             TextButton(
-              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-              child: const Text('ดู', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+              ),
+              child: Text(
+                'ดู',
+                style: AppTypography.caption4.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                ),
+              ),
             ),
           ],
         ),

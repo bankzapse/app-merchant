@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
+import 'package:merchant_app/features/auth/providers/auth_provider.dart';
 
-class AuthConfirmationScreen extends StatefulWidget {
+class AuthConfirmationScreen extends ConsumerStatefulWidget {
   const AuthConfirmationScreen({super.key});
 
   @override
-  State<AuthConfirmationScreen> createState() => _AuthConfirmationScreenState();
+  ConsumerState<AuthConfirmationScreen> createState() =>
+      _AuthConfirmationScreenState();
 }
 
-class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
+class _AuthConfirmationScreenState
+    extends ConsumerState<AuthConfirmationScreen> {
   bool _agreedToTerms = false;
   bool _agreedToCampaign = false;
   bool _agreedToMarketing = false;
@@ -24,9 +30,14 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
     });
   }
 
-  Widget _buildCheckboxRow(bool value, String text, Function(bool?) onChanged, {List<TextSpan>? richText}) {
+  Widget _buildAgreementRow(
+    bool value,
+    String text,
+    Function(bool?) onChanged, {
+    List<TextSpan>? richText,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,24 +48,32 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
               value: value,
               onChanged: onChanged,
               activeColor: AppColors.primary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray, width: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              side: const BorderSide(color: Color(0xFFE2E8F0), width: 1.5),
             ),
           ),
-          const SizedBox(width: 16),
-           Expanded(
-              child: richText != null 
-              ? RichText(
-                  text: TextSpan(
-                    style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
-                    children: richText,
+          const SizedBox(width: 12),
+          Expanded(
+            child: richText != null
+                ? RichText(
+                    text: TextSpan(
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        height: 1.5,
+                      ),
+                      children: richText,
+                    ),
+                  )
+                : Text(
+                    text,
+                    style: AppTypography.body2.copyWith(
+                      color: AppColors.semanticGrayNeutralFgHigh,
+                      height: 1.5,
+                    ),
                   ),
-                )
-              : Text(
-               text,
-               style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
-             ),
-           ),
+          ),
         ],
       ),
     );
@@ -63,159 +82,221 @@ class _AuthConfirmationScreenState extends State<AuthConfirmationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 7 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              height: 4,
-              width: double.infinity,
-              color: AppColors.semanticGrayNeutralBgLightGray,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: double.infinity,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const AuthStepIndicator(currentStep: 7),
+                    const SizedBox(height: 32),
                     Text(
-                      'คำยืนยัน',
-                      style: AppTypography.heading3.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                      'การยืนยันข้อมูล',
+                      style: AppTypography.heading3.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Text(
-                      'เมื่อทำเครื่องหมายในช่องด้านล่าง จะถือว่าคุณยืนยันในนาม\nของคุณ บริษัท และบุคคลที่ได้รับการเสนอชื่อ (รวมเรียกว่า\n"คุณ") ว่าคุณได้อ่าน ทำความเข้าใจ และยอมรับ:',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite, height: 1.5),
+                      'ตรวจสอบข้อมูลและยอมรับเงื่อนไขการใช้บริการเพื่อเสร็จสิ้นการลงทะเบียน',
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                        height: 1.5,
+                      ),
                     ),
                     const SizedBox(height: 32),
-                    _buildCheckboxRow(
-                      _agreedToTerms,
-                      '',
-                      (value) {
-                         setState(() {
-                          _agreedToTerms = value ?? false;
-                          _validateInput();
-                        });
-                      },
-                      richText: [
-                        TextSpan(text: 'ข้อตกลงการใช้งาน Mass', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ', '),
-                        TextSpan(text: 'ข้อกำหนดและ\nเงื่อนไขร้านค้า (ข้อกำหนดและเงื่อนไข\nMassFood)', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ', '),
-                         TextSpan(text: 'ความยินยอมรับข้อตกลง', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ',\n'),
-                        TextSpan(text: 'นโยบายสินค้า', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                         const TextSpan(text: ', '),
-                        TextSpan(text: 'ประกาศความเป็นส่วนตัวของ\nMass', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                      ]
-                    ),
-                    _buildCheckboxRow(
-                      _agreedToCampaign,
-                      '',
-                      (value) {
-                        setState(() {
-                          _agreedToCampaign = value ?? false;
-                          _validateInput();
-                        });
-                      },
-                       richText: [
-                        const TextSpan(text: 'ตกลงเข้าร่วมทดลองใช้ฟรีแคมเปญร้านเล็ก\nลดทั้งร้าน (ตกลงยอมรับ'),
-                        TextSpan(text: 'เงื่อนไขระยะเวลา\nยกเว้นค่าธรรมเนียมแคมเปญ "ร้านเล็กลดทั้ง\nร้าน"', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ' และ '),
-                        TextSpan(text: 'ข้อกำหนดของการให้บริการ Mass\nMarketing Services', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ')'),
-                      ]
-                    ),
-                    _buildCheckboxRow(
-                      _agreedToMarketing,
-                       '',
-                      (value) {
-                         setState(() {
-                          _agreedToMarketing = value ?? false;
-                          _validateInput();
-                        });
-                      },
-                      richText: [
-                        const TextSpan(text: 'การส่ง'),
-                        TextSpan(text: 'ข้อมูลการตลาด', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ' เช่น แนวทางปฏิบัติที่\nดีที่สุด ข้อมูลเชิงลึก และโปรโมชันเพื่อช่วย\nเพิ่มยอดขาย'),
-                      ]
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Text(
-                            'ฉันมีรหัสผู้แนะนำ',
-                            style: AppTypography.caption5.copyWith(fontWeight: FontWeight.bold, color: AppColors.semanticGrayNeutralFgHigh),
-                          ),
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: Checkbox(
-                              value: _hasReferralCode,
-                              onChanged: (value) {
-                                 setState(() {
-                                    _hasReferralCode = value ?? false;
-                                 });
-                              },
-                              activeColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                              side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray, width: 2),
+
+                    // Card: Agreements
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ข้อกำหนดและเงื่อนไข',
+                            style: AppTypography.label1.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                       ],
+                          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+                          _buildAgreementRow(
+                            _agreedToTerms,
+                            '',
+                            (value) {
+                              setState(() {
+                                _agreedToTerms = value ?? false;
+                                _validateInput();
+                              });
+                            },
+                            richText: [
+                              const TextSpan(text: 'ฉันได้อ่านและยอมรับ '),
+                              TextSpan(
+                                text: 'ข้อตกลงการใช้งาน',
+                                style: AppTypography.body2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(text: ', '),
+                              TextSpan(
+                                text: 'นโยบายความเป็นส่วนตัว',
+                                style: AppTypography.body2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(text: ' และ '),
+                              TextSpan(
+                                text: 'เงื่อนไขร้านค้า',
+                                style: AppTypography.body2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(text: ' ของ Just Merchant'),
+                            ],
+                          ),
+                          _buildAgreementRow(
+                            _agreedToCampaign,
+                            'ตกลงเข้าร่วมแคมเปญทดลองใช้ฟรีสำหรับร้านค้าใหม่ เพื่อรับสิทธิพิเศษในการยกเว้นค่าธรรมเนียมในช่วงเริ่มต้น',
+                            (value) {
+                              setState(() {
+                                _agreedToCampaign = value ?? false;
+                                _validateInput();
+                              });
+                            },
+                          ),
+                          _buildAgreementRow(
+                            _agreedToMarketing,
+                            'ยินยอมรับข้อมูลข่าวสาร โปรโมชัน และเทคนิคการเพิ่มยอดขายผ่านช่องทางการตลาดต่างๆ',
+                            (value) {
+                              setState(() {
+                                _agreedToMarketing = value ?? false;
+                                _validateInput();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
+
+                    const SizedBox(height: 24),
+
+                    // Card: Referral
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.card_giftcard,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'ฉันมีรหัสผู้แนะนำ',
+                              style: AppTypography.body2.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Switch.adaptive(
+                            value: _hasReferralCode,
+                            activeColor: AppColors.primary,
+                            onChanged: (value) {
+                              setState(() {
+                                _hasReferralCode = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_hasReferralCode) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
+                        ),
+                        decoration: AppTheme.premiumCardDecoration,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'กรอกรหัสผู้แนะนำ (ถ้ามี)',
+                            hintStyle: AppTypography.body2.copyWith(
+                              color: const Color(0xFF94A3B8),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 48),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
+            // Bottom Button
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isInputValid ? () {
-                    context.go('/');
-                  } : null,
+                  onPressed: _isInputValid
+                      ? () async {
+                          await ref.read(authProvider.notifier).mockLogin();
+                          if (context.mounted) {
+                            context.go('/');
+                          }
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.semanticSuccessBgHigh : AppColors.semanticGrayNeutralBgLightGray,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                    elevation: 0,
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
+                  ),
+                  child: Text(
+                    'เสร็จสิ้นการลงทะเบียน',
+                    style: AppTypography.label1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text('ส่ง', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
                 ),
               ),
             ),

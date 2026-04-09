@@ -9,114 +9,156 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                       Container(
-                         height: 200,
-                         width: double.infinity,
-                         decoration: BoxDecoration(
-                           color: AppColors.primaryLight,
-                           borderRadius: BorderRadius.circular(16),
-                         ),
-                         child: const Center(
-                           child: Icon(Icons.storefront_rounded, size: 80, color: AppColors.primary),
-                         ),
-                       ),
-                       const SizedBox(height: 32),
-                       Text(
-                         'เข้าถึงลูกค้ามากมายนับล้าน',
-                         style: AppTypography.heading4.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                         textAlign: TextAlign.center,
-                       ),
-                       const SizedBox(height: 12),
-                       Text(
-                         'ขยายรูปแบบการให้บริการ ไม่ว่าจะเป็นเดลิเวอรี ให้ลูกค้ามารับที่ร้านได้ รับชำระแบบไม่ใช้เงินสด และอื่นๆ อีกมากมาย',
-                         style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                         textAlign: TextAlign.center,
-                       ),
-                       const SizedBox(height: 24),
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
-                           const SizedBox(width: 8),
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
-                           const SizedBox(width: 8),
-                           Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.semanticGrayNeutralBorderLightGray, shape: BoxShape.circle)),
-                         ],
-                       ),
-                    ],
-                  ),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Background Gradient Element
+          Positioned(
+            top: -100,
+            right: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.primary.withOpacity(0.08),
+                    AppColors.primary.withOpacity(0),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => context.push('/register/phone'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryLight,
-                            foregroundColor: AppColors.primaryDark,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Text('ลงทะเบียน', style: AppTypography.label2.copyWith(color: AppColors.primaryDark)),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => context.push('/login'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Text('เข้าสู่ระบบ', style: AppTypography.label2.copyWith(color: Colors.white)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const TextSpan(text: 'ข้าพเจ้าได้อ่าน เข้าใจ และยอมรับ '),
-                        TextSpan(text: 'ข้อตกลงการใช้บริการ', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
-                        const TextSpan(text: ' และ\n'),
-                        TextSpan(text: 'นโยบายความเป็นส่วนตัว', style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh)),
+                        // Premium Logo Container
+                        Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.1),
+                                blurRadius: 30,
+                                offset: const Offset(0, 15),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.storefront_rounded,
+                              size: 60,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 48),
+                        Text(
+                          'Just Merchant',
+                          style: AppTypography.heading2.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'เข้าถึงลูกค้ามากมายนับล้าน\nและขยายธุรกิจของคุณอย่างมืออาชีพ',
+                          style: AppTypography.body1.copyWith(
+                            color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                            height: 1.6,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                // Bottom Actions
+                Container(
+                  padding: const EdgeInsets.all(32.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(40),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 20,
+                        offset: const Offset(0, -10),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => context.push('/register/phone'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 8,
+                            shadowColor: AppColors.primary.withOpacity(0.3),
+                          ),
+                          child: const Text('สมัครสมาชิกใหม่'),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () => context.push('/login/phone'),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: AppColors.primary.withOpacity(0.2),
+                              width: 1.5,
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Text(
+                            'เข้าสู่ระบบ',
+                            style: AppTypography.label2.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Text(
+                        'การใช้งานแอปพลิเคชันถือว่าคุณยอมรับ\nเงื่อนไขการใช้บริการ และ นโยบายความเป็นส่วนตัว',
+                        style: AppTypography.caption5.copyWith(
+                          color: AppColors.semanticGrayNeutralFgLowOnWhite,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

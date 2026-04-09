@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:merchant_app/core/network/api_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // State
 class AuthState {
@@ -26,9 +27,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _init() async {
-    // Check if token exists
     try {
-      final token = await ApiClient().dio.options.headers['Authorization'];
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
       if (token != null) {
         state = state.copyWith(isLoading: false, isAuthenticated: true);
       } else {
@@ -67,6 +68,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
+  }
+
+  Future<void> mockLogin() async {
+    state = state.copyWith(isLoading: true);
+    await Future.delayed(const Duration(milliseconds: 500));
+    await ApiClient.saveToken('mock_token_123');
+    state = state.copyWith(isLoading: false, isAuthenticated: true);
   }
 
   Future<void> logout() async {

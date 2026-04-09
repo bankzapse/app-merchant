@@ -4,6 +4,10 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>แอปนี้ต้องใช้ตำแหน่งเพื่อแสดงการรับส่งและค้นหาคนขับใกล้คุณ</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>แอปต้องใช้ตำแหน่งเพื่อให้บริการติดตามการเดินทางแบบเรียลไทม์</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

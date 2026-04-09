@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
 
 class AuthBusinessTypeScreen extends StatefulWidget {
   const AuthBusinessTypeScreen({super.key});
@@ -12,7 +14,7 @@ class AuthBusinessTypeScreen extends StatefulWidget {
 
 class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
   String? _selectedBusinessType;
-  
+
   bool _isInputValid = false;
 
   void _validateInput() {
@@ -21,16 +23,87 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
     });
   }
 
-  Widget _buildTextFieldLabel(String label, {bool isRequired = true}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: RichText(
-        text: TextSpan(
-          text: label,
-          style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
-          children: isRequired
-              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
-              : [],
+  Widget _buildTypeCard(String title, String subtitle, IconData icon) {
+    bool isSelected = _selectedBusinessType == title;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedBusinessType = title;
+          _validateInput();
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : const Color(0xFFE2E8F0),
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primary.withOpacity(0.1)
+                    : const Color(0xFFF8FAFC),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? AppColors.primary : const Color(0xFF94A3B8),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTypography.label1.copyWith(
+                      color: AppColors.semanticGrayNeutralFgHigh,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: AppTypography.caption5.copyWith(
+                      color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle,
+                color: AppColors.primary,
+                size: 24,
+              ),
+          ],
         ),
       ),
     );
@@ -39,176 +112,136 @@ class _AuthBusinessTypeScreenState extends State<AuthBusinessTypeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 4 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 4,
-              width: double.infinity,
-              color: AppColors.semanticGrayNeutralBgLightGray,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * (4 / 7),
-                  color: AppColors.primary,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AuthStepIndicator(currentStep: 4),
+              const SizedBox(height: 32),
+              Text(
+                'เลือกประเภทธุรกิจ',
+                style: AppTypography.heading3.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+              const SizedBox(height: 8),
+              Text(
+                'ข้อมูลนี้จะช่วยให้เราเตรียมเอกสารและรูปแบบภาษีที่ถูกต้องสำหรับร้านค้าของคุณ',
+                style: AppTypography.body2.copyWith(
+                  color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              _buildTypeCard(
+                'ธุรกิจส่วนตัว',
+                'เจ้าของคนเดียว ไม่ได้จดทะเบียนนิติบุคคล',
+                Icons.person_outline,
+              ),
+              _buildTypeCard(
+                'ห้างหุ้นส่วนจำกัด',
+                'จดทะเบียนในรูปแบบ หจก.',
+                Icons.group_outlined,
+              ),
+              _buildTypeCard(
+                'บริษัทจำกัด',
+                'จดทะเบียนในรูปแบบบริษัท (บจก.)',
+                Icons.business_outlined,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Contact Summary Card
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: AppTheme.premiumCardDecoration,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'ข้อมูลร้าน',
-                      style: AppTypography.heading3.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'โปรดกรอกข้อมูลร้าน ช่องทางการติดต่อ และเอกสารสำหรับ\nตรวจสอบยืนยัน',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      'ข้อมูลธุรกิจ',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ประเภทธุรกิจ'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedBusinessType,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือกประเภทธุรกิจ', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['ธุรกิจส่วนตัว', 'ห้างหุ้นส่วนจำกัด', 'บริษัทจำกัด'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedBusinessType = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      'ช่องทางการติดต่อเจ้าของธุรกิจ',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'ธุรกิจส่วนตัวหรือกิจการที่มีเจ้าของคนเดียว สามารถใช้เบอร์\nและอีเมลของเจ้าของ เพื่อเป็นช่องทางในการติดต่อ',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 24),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('เบอร์เจ้าของธุรกิจ'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('+66 892616445', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('อีเมลเจ้าของธุรกิจ'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('test@example.com', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                              children: [
-                                const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
-                                TextSpan(
-                                  text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
-                                ),
-                                const TextSpan(text: ' ของเรา'),
-                              ],
-                            ),
+                        Text(
+                          'ช่องทางการติดต่อร่วมกับแอป',
+                          style: AppTypography.label1.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const Icon(
+                          Icons.edit_outlined,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.phone_outlined,
+                          size: 16,
+                          color: Color(0xFF64748B),
+                        ),
+                        const SizedBox(width: 8),
+                        Text('+66 892616445', style: AppTypography.body2),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.mail_outline,
+                          size: 16,
+                          color: Color(0xFF64748B),
+                        ),
+                        const SizedBox(width: 8),
+                        Text('test@example.com', style: AppTypography.body2),
                       ],
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: SizedBox(
+
+              const SizedBox(height: 48),
+
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isInputValid ? () {
-                     context.push('/register/personal_info');
-                  } : null,
+                  onPressed: _isInputValid
+                      ? () {
+                          context.push('/register/personal_info');
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
+                  child: const Text('บันทึกและดำเนินการต่อ'),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

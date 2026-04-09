@@ -1,15 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:merchant_app/core/services/socket_service.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
-import 'package:merchant_app/core/services/socket_service.dart';
-import 'package:merchant_app/features/home/presentation/screens/dashboard_screen.dart';
-import 'package:merchant_app/features/orders/presentation/screens/orders_screen.dart';
-import 'package:merchant_app/features/menu/presentation/screens/menu_screen.dart';
 import 'package:merchant_app/features/finance/presentation/screens/finance_screen.dart';
-import 'package:merchant_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:merchant_app/features/home/presentation/screens/dashboard_screen.dart';
 import 'package:merchant_app/features/home/providers/navigation_provider.dart';
-import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
+import 'package:merchant_app/features/menu/presentation/screens/menu_screen.dart';
+import 'package:merchant_app/features/orders/presentation/screens/orders_screen.dart';
+import 'package:merchant_app/features/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -27,12 +28,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     ProfileScreen(),
   ];
 
-
-
   @override
   void initState() {
     super.initState();
-    // Connect socket service on startup
     socketService.connect(mockMode: true);
   }
 
@@ -45,37 +43,216 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(navigationProvider);
-    final profileAsync = ref.watch(restaurantProfileProvider);
-
-    final isPaused = profileAsync.maybeWhen(
-      data: (p) => p.status == RestaurantStatus.paused,
-      orElse: () => false,
-    );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
-      body: Column(
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      body: Stack(
         children: [
-          Expanded(
+          // Content
+          Positioned.fill(
             child: IndexedStack(
               index: currentIndex,
-              children: _pages,
+              children: _pages
+                  .map(
+                    (page) => Padding(
+                      padding: const EdgeInsets.only(bottom: 90),
+                      // Space for floating nav bar
+                      child: page,
+                    ),
+                  )
+                  .toList(),
             ),
+          ),
+
+          // Floating Nav Bar
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 30,
+            child: _buildFloatingPill(currentIndex),
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomNav(currentIndex),
-      // Show page titles in app bar only for some pages
-      appBar: _buildAppBar(currentIndex, ref),
+    );
+  }
+
+  Widget _buildFloatingPill(int currentIndex) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        // Pill Background
+        Container(
+          height: 64,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.92),
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(32),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(32),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.2),
+                    width: 0.5,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Nav Items
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildFloatingNavItem(
+                0,
+                Icons.home_outlined,
+                Icons.home_rounded,
+                'หน้าแรก',
+                currentIndex,
+              ),
+              _buildFloatingNavItem(
+                1,
+                Icons.receipt_long_outlined,
+                Icons.receipt_long_rounded,
+                'คำสั่งซื้อ',
+                currentIndex,
+              ),
+              _buildFloatingNavItem(
+                2,
+                Icons.restaurant_menu_outlined,
+                Icons.restaurant_menu_rounded,
+                'เมนู',
+                currentIndex,
+              ),
+              _buildFloatingNavItem(
+                3,
+                Icons.account_balance_wallet_outlined,
+                Icons.account_balance_wallet_rounded,
+                'การเงิน',
+                currentIndex,
+              ),
+              _buildFloatingNavItem(
+                4,
+                Icons.person_outline,
+                Icons.person_rounded,
+                'บัญชี',
+                currentIndex,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingNavItem(
+    int index,
+    IconData outlineIcon,
+    IconData filledIcon,
+    String label,
+    int currentIndex,
+  ) {
+    final isSelected = currentIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => ref.read(navigationProvider.notifier).state = index,
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            // Floating Circle for Selected Tab
+            if (isSelected)
+              Positioned(
+                top: -10,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppColors.primaryDark, AppColors.primary],
+                    ),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFFFCF9F8),
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primaryDark.withValues(alpha: 0.2),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Icon(filledIcon, color: Colors.white, size: 24),
+                ),
+              ),
+
+            // Icon and Label Container
+            SizedBox(
+              height: 64,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!isSelected) ...[
+                    Icon(outlineIcon, color: const Color(0xFF64748B), size: 24),
+                    const SizedBox(height: 4),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        label,
+                        style: AppTypography.caption5.copyWith(
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          label,
+                          style: AppTypography.caption4.copyWith(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   PreferredSizeWidget? _buildAppBar(int index, WidgetRef ref) {
-    // Dashboard and Profile have their own header portions; for others use a simple AppBar
     if (index == 0 || index == 4) return null;
-
     final titles = ['หน้าแรก', 'คำสั่งซื้อ', 'เมนู', 'การเงิน', 'เพิ่มเติม'];
-
     return AppBar(
       title: Text(
         titles[index],
@@ -93,91 +270,4 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       ),
     );
   }
-
-  Widget _buildPausedBanner(String? pausedUntil) {
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFFFFEDEB),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          const Icon(Icons.storefront, color: Color(0xFFCC0000), size: 20),
-          const SizedBox(width: 8),
-          TextButton(
-            onPressed: () {
-              ref.read(restaurantProfileProvider.notifier).setStatus(RestaurantStatus.open);
-            },
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: Size.zero,
-            ),
-            child: Text(
-              'รับคำสั่งซื้อต่อ',
-              style: AppTypography.label3.copyWith(
-                color: const Color(0xFF0080FF),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav(int currentIndex) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFEEEEEE))),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) => ref.read(navigationProvider.notifier).state = index,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF00B14F),
-        unselectedItemColor: const Color(0xFF888888),
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        selectedFontSize: 10,
-        unselectedFontSize: 10,
-        selectedLabelStyle: AppTypography.caption5
-            .copyWith(fontWeight: FontWeight.w600),
-        unselectedLabelStyle: AppTypography.caption5,
-        items: [
-          BottomNavigationBarItem(
-            icon: _navIcon('🏠', false, currentIndex == 0),
-            label: 'หน้าแรก',
-          ),
-          BottomNavigationBarItem(
-            icon: _navIcon('🍽️', false, currentIndex == 1),
-            label: 'คำสั่งซื้อ',
-          ),
-          BottomNavigationBarItem(
-            icon: _navIcon('📋', false, currentIndex == 2),
-            label: 'เมนู',
-          ),
-          BottomNavigationBarItem(
-            icon: _navIcon('💰', false, currentIndex == 3),
-            label: 'การเงิน',
-          ),
-          BottomNavigationBarItem(
-            icon: _navIcon('⋯', false, currentIndex == 4),
-            label: 'เพิ่มเติม',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navIcon(String emoji, bool badge, bool selected) {
-    final icons = {
-      '🏠': selected ? Icons.home : Icons.home_outlined,
-      '🍽️': selected ? Icons.receipt : Icons.receipt_outlined,
-      '📋': selected ? Icons.restaurant_menu : Icons.restaurant_menu_outlined,
-      '💰': selected ? Icons.account_balance_wallet : Icons.account_balance_wallet_outlined,
-      '⋯': selected ? Icons.grid_view : Icons.grid_view_outlined,
-    };
-    return Icon(icons[emoji] ?? Icons.circle, size: 24);
-  }
-
 }

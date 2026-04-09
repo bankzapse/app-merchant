@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/ads/presentation/screens/ads_screen.dart';
 import 'package:merchant_app/features/auth/providers/auth_provider.dart';
 import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
-import 'package:merchant_app/features/ads/presentation/screens/ads_screen.dart';
-import 'package:merchant_app/features/profile/presentation/screens/store_details_screen.dart';
 import 'package:merchant_app/features/profile/presentation/screens/bank_account_screen.dart';
 import 'package:merchant_app/features/profile/presentation/screens/closing_hours_screen.dart';
+import 'package:merchant_app/features/profile/presentation/screens/store_details_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -17,7 +18,7 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(restaurantProfileProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -38,35 +39,54 @@ class ProfileScreen extends ConsumerWidget {
                                 fit: BoxFit.cover,
                               )
                             : null,
-                        color: const Color(0xFFEEEEEE),
+                        gradient: p.coverImageUrl == null
+                            ? LinearGradient(
+                                colors: [
+                                  AppColors.primary.withOpacity(0.8),
+                                  AppColors.primary,
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )
+                            : null,
                       ),
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black.withOpacity(0.4)],
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.4),
+                            ],
                           ),
                         ),
                       ),
                     ),
                     orElse: () => Container(
                       height: 180,
-                      color: const Color(0xFFEEEEEE),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.primary.withOpacity(0.8),
+                            AppColors.primary,
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
                     bottom: -50,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.12),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
                           ),
                         ],
                       ),
@@ -76,14 +96,22 @@ class ProfileScreen extends ConsumerWidget {
                                 radius: 46,
                                 backgroundImage: NetworkImage(p.logoUrl!),
                               )
-                            : const CircleAvatar(
-                                radius: 46,
-                                backgroundColor: Color(0xFFF0F0F0),
-                                child: Icon(Icons.storefront, size: 40, color: Color(0xFF888888)),
+                            : Container(
+                                width: 92,
+                                height: 92,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFF1F5F9),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.storefront_rounded,
+                                  size: 40,
+                                  color: Color(0xFF94A3B8),
+                                ),
                               ),
                         orElse: () => const CircleAvatar(
                           radius: 46,
-                          backgroundColor: Color(0xFFF0F0F0),
+                          backgroundColor: Color(0xFFF1F5F9),
                         ),
                       ),
                     ),
@@ -94,77 +122,113 @@ class ProfileScreen extends ConsumerWidget {
 
               // ─── Name & address ─────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     profileAsync.maybeWhen(
                       data: (p) => Column(
                         children: [
-                          Text(p.name,
-                              style: AppTypography.heading4.copyWith(
-                                color: const Color(0xFF111111),
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center),
-                          const SizedBox(height: 4),
+                          Text(
+                            p.name,
+                            style: AppTypography.heading4.copyWith(
+                              color: AppColors.semanticGrayNeutralFgHigh,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 6),
                           if (p.address != null)
-                            Text(p.address!,
-                                style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
-                                textAlign: TextAlign.center),
+                            Text(
+                              p.address!,
+                              style: AppTypography.body3.copyWith(
+                                color: const Color(0xFF64748B),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                         ],
                       ),
-                      orElse: () => const CircularProgressIndicator(color: Color(0xFF00B14F)),
+                      orElse: () => const CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 32),
 
                     // ─── Menu Cards ──────────────────────
                     _buildMenuCard(
-                      icon: Icons.store_mall_directory_outlined,
+                      icon: Icons.store_mall_directory_rounded,
                       title: 'ร้าน',
                       subtitle: 'จัดการข้อมูลร้าน, ภาพ และที่อยู่',
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const StoreDetailsScreen())),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const StoreDetailsScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _buildMenuCard(
-                      icon: Icons.access_time_outlined,
+                      icon: Icons.schedule_rounded,
                       title: 'เวลาเปิด-ปิด',
                       subtitle: 'วันหยุดพิเศษและเวลาจัดส่ง',
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const ClosingHoursScreen())),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ClosingHoursScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _buildMenuCard(
-                      icon: Icons.account_balance_outlined,
+                      icon: Icons.account_balance_rounded,
                       title: 'บัญชีธนาคาร',
                       subtitle: 'จัดการการรับเงินและขอถอนเงิน',
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const BankAccountScreen())),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const BankAccountScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _buildMenuCard(
-                      icon: Icons.campaign_outlined,
+                      icon: Icons.campaign_rounded,
                       title: 'โปรโมทร้านค้า (Ads)',
                       subtitle: 'จัดการงบประมาณและราคาประมูลรายวัน',
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const AdsScreen())),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AdsScreen()),
+                      ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
 
                     // ─── Logout ──────────────────────────
                     OutlinedButton.icon(
-                      icon: const Icon(Icons.logout, color: Color(0xFFE74C3C)),
-                      label: Text('ออกจากระบบ',
-                          style: AppTypography.label2.copyWith(color: const Color(0xFFE74C3C))),
+                      icon: const Icon(
+                        Icons.logout_rounded,
+                        color: AppColors.primary,
+                      ),
+                      label: Text(
+                        'ออกจากระบบ',
+                        style: AppTypography.label2.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFE74C3C), width: 1.5),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        minimumSize: const Size.fromHeight(50),
+                        side: const BorderSide(
+                          color: AppColors.primary,
+                          width: 2,
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        minimumSize: const Size.fromHeight(56),
+                        elevation: 0,
                       ),
                       onPressed: () => ref.read(authProvider.notifier).logout(),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
                   ],
                 ),
               ),
@@ -182,53 +246,53 @@ class ProfileScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+      decoration: AppTheme.premiumCardDecoration.copyWith(
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.semanticGrayNeutralBgLightGray,
-                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.primary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, color: const Color(0xFF00B14F), size: 24),
+                  child: Icon(icon, color: AppColors.primary, size: 24),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title,
-                          style: AppTypography.body1.copyWith(
-                            color: const Color(0xFF222222),
-                            fontWeight: FontWeight.w600,
-                          )),
-                      const SizedBox(height: 2),
-                      Text(subtitle,
-                          style: AppTypography.caption5.copyWith(color: const Color(0xFF888888))),
+                      Text(
+                        title,
+                        style: AppTypography.label2.copyWith(
+                          color: AppColors.semanticGrayNeutralFgHigh,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: AppTypography.caption5.copyWith(
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Color(0xFF888888)),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Color(0xFF94A3B8),
+                  size: 16,
+                ),
               ],
             ),
           ),

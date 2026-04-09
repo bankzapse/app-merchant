@@ -82,7 +82,7 @@ class _OpeningHoursScreenState extends State<OpeningHoursScreen> {
               child: ElevatedButton(
                 onPressed: _isSaving ? null : _save,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00B14F),
+                  backgroundColor: const Color(0xFFE5002B),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -125,7 +125,7 @@ class _OpeningHoursScreenState extends State<OpeningHoursScreen> {
               ),
               Switch(
                 value: day.isOpen,
-                activeColor: const Color(0xFF00B14F),
+                activeColor: const Color(0xFFE5002B),
                 onChanged: (val) => setState(() => day.isOpen = val),
               ),
             ],
@@ -143,7 +143,7 @@ class _OpeningHoursScreenState extends State<OpeningHoursScreen> {
                 const Spacer(),
                 Switch(
                   value: day.is24hr,
-                  activeColor: const Color(0xFF00B14F),
+                  activeColor: const Color(0xFFE5002B),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: (val) => setState(() => day.is24hr = val),
                 ),
@@ -230,7 +230,7 @@ class _OpeningHoursScreenState extends State<OpeningHoursScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('บันทึกเวลาเปิด-ปิดเรียบร้อยแล้ว'),
-          backgroundColor: Color(0xFF00B14F),
+          backgroundColor: Color(0xFFE5002B),
           behavior: SnackBarBehavior.floating,
         ),
       );

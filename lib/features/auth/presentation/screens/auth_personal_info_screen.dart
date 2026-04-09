@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
 
 class AuthPersonalInfoScreen extends StatefulWidget {
   const AuthPersonalInfoScreen({super.key});
@@ -22,27 +24,31 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
   String? _selectedDistrict;
   String? _selectedSubdistrict;
   final TextEditingController _zipcodeController = TextEditingController();
-  
+
   bool _isInputValid = false;
 
   @override
   void initState() {
     super.initState();
+    _nameController.addListener(_validateInput);
     _idController.addListener(_validateInput);
+    _addressController.addListener(_validateInput);
+    _zipcodeController.addListener(_validateInput);
   }
 
   void _validateInput() {
     setState(() {
-       // Validate core fields, ensuring they are filled before moving to the next step.
-      _isInputValid = _selectedTitle != null &&
+      _isInputValid =
+          _selectedTitle != null &&
           _nameController.text.isNotEmpty &&
+          _idController.text.length >= 13 &&
           _selectedBirthDate != null &&
           _selectedExpiryDate != null &&
           _addressController.text.isNotEmpty &&
           _selectedProvince != null &&
           _selectedDistrict != null &&
           _selectedSubdistrict != null &&
-          _zipcodeController.text.isNotEmpty;
+          _zipcodeController.text.length == 5;
     });
   }
 
@@ -55,16 +61,60 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
     super.dispose();
   }
 
-  Widget _buildTextFieldLabel(String label, {bool isRequired = true}) {
+  Widget _buildFieldLabel(String label, {bool isRequired = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: RichText(
         text: TextSpan(
           text: label,
-          style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
+          style: AppTypography.label2.copyWith(
+            color: AppColors.semanticGrayNeutralFgHigh,
+            fontWeight: FontWeight.bold,
+          ),
           children: isRequired
-              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
+              ? [
+                  TextSpan(
+                    text: ' *',
+                    style: AppTypography.label2.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ]
               : [],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownCard(
+    String? value,
+    String hint,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          hint: Text(
+            hint,
+            style: AppTypography.body2.copyWith(color: const Color(0xFF94A3B8)),
+          ),
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF64748B)),
+          items: items.map((String val) {
+            return DropdownMenuItem<String>(
+              value: val,
+              child: Text(val, style: AppTypography.body2),
+            );
+          }).toList(),
+          onChanged: onChanged,
         ),
       ),
     );
@@ -73,466 +123,414 @@ class _AuthPersonalInfoScreenState extends State<AuthPersonalInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 5 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              height: 4,
-              width: double.infinity,
-              color: AppColors.semanticGrayNeutralBgLightGray,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * (5 / 7),
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const AuthStepIndicator(currentStep: 5),
+                    const SizedBox(height: 32),
                     Text(
-                      'กรอกข้อมูลของคุณ',
-                      style: AppTypography.heading3.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                      'ข้อมูลส่วนตัว',
+                      style: AppTypography.heading3.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Mass จำเป็นต้องตรวจสอบข้อมูลของคุณในฐานะเจ้าของ\nสำหรับการยืนยันตัวตนเพื่อดำเนินการลงทะเบียนและลงนาม\nในสัญญา',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
+                      'กรุณาระบุข้อมูลตามบัตรประชาชนเพื่อใช้ในการยืนยันตัวตนและทำสัญญา',
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                        height: 1.5,
+                      ),
                     ),
                     const SizedBox(height: 32),
-                    Text(
-                      'รายละเอียดโปรไฟล์ของคุณ',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('สัญชาติ'),
+
+                    // Card 1: Identity
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedNationality,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('Thailand', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['Thailand', 'Other'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedNationality = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
-                          const SizedBox(width: 12),
-                          RichText(
-                            text: TextSpan(
-                              text: 'บัตรประชาชน',
-                              style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                              children: [
-                                TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                     const SizedBox(height: 12),
-                    Text(
-                      'Mass ให้ความสำคัญกับความเป็นส่วนตัวของคุณ เราจะไม่ใช้หรือแชร์\nข้อมูลส่วนตัวที่ละเอียดอ่อน (เช่น ศาสนาหรือหมู่เลือด) โดยไม่ได้รับ\nอนุญาตหรือไม่มีเหตุผลทางกฎหมาย',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildTextFieldLabel('เลขประจำตัวประชาชนหรือเลขที่หนังสือเดินทาง'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: TextField(
-                        controller: _idController,
-                        keyboardType: TextInputType.number,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: 'ตัวอย่าง: 1500000000000',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('คำนำหน้า'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedTitle,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['นาย', 'นาง', 'นางสาว'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedTitle = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ชื่อ-นามสกุลเจ้าของร้าน'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: TextField(
-                        controller: _nameController,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: 'ตัวอย่าง: สมหญิง ใจงาม',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                        onChanged: (_) => _validateInput(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary, width: 0.5),
-                      ),
-                      child: Row(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.info, color: AppColors.primary, size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'โปรดกรอกชื่อ-นามสกุลของคุณ โดยไม่ต้องระบุคำนำหน้าชื่อ',
-                              style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.person_pin_outlined,
+                                color: AppColors.primary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'ข้อมูลระบุตัวตน',
+                                style: AppTypography.label1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+                          _buildFieldLabel('สัญชาติ'),
+                          _buildDropdownCard(
+                            _selectedNationality,
+                            'เลือกสัญชาติ',
+                            ['Thailand', 'Other'],
+                            (val) {
+                              setState(() => _selectedNationality = val);
+                              _validateInput();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          _buildFieldLabel('เลขประจำตัวประชาชน'),
+                          TextField(
+                            controller: _idController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: '1-xxxx-xxxxx-xx-x',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('คำนำหน้า'),
+                                    _buildDropdownCard(
+                                      _selectedTitle,
+                                      'เลือก',
+                                      ['นาย', 'นาง', 'นางสาว'],
+                                      (val) {
+                                        setState(() => _selectedTitle = val);
+                                        _validateInput();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('ชื่อ-นามสกุล'),
+                                    TextField(
+                                      controller: _nameController,
+                                      decoration: const InputDecoration(
+                                        hintText: 'สมชาย ใจดี',
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('วันเกิด (พ.ศ.)'),
+                                    InkWell(
+                                      onTap: () async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime(1990),
+                                          firstDate: DateTime(1950),
+                                          lastDate: DateTime.now(),
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: Theme.of(context).copyWith(
+                                                colorScheme: const ColorScheme.light(
+                                                  primary: AppColors.primary,
+                                                ),
+                                              ),
+                                              child: child!,
+                                            );
+                                          },
+                                        );
+                                        if (date != null) {
+                                          setState(
+                                            () => _selectedBirthDate =
+                                                "${date.day}/${date.month}/${date.year + 543}",
+                                          );
+                                          _validateInput();
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF8FAFC),
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: const Color(0xFFE2E8F0),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.calendar_today_outlined,
+                                              size: 18,
+                                              color: _selectedBirthDate != null
+                                                  ? AppColors.primary
+                                                  : const Color(0xFF94A3B8),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              _selectedBirthDate ?? 'วว/ดด/ปปปป',
+                                              style: AppTypography.body2.copyWith(
+                                                color: _selectedBirthDate != null
+                                                    ? null
+                                                    : const Color(0xFF94A3B8),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('วันหมดอายุบัตร (พ.ศ.)'),
+                                    InkWell(
+                                      onTap: () async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime.now().add(const Duration(days: 365 * 20)),
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: Theme.of(context).copyWith(
+                                                colorScheme: const ColorScheme.light(
+                                                  primary: AppColors.primary,
+                                                ),
+                                              ),
+                                              child: child!,
+                                            );
+                                          },
+                                        );
+                                        if (date != null) {
+                                          setState(
+                                            () => _selectedExpiryDate =
+                                                "${date.day}/${date.month}/${date.year + 543}",
+                                          );
+                                          _validateInput();
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF8FAFC),
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: const Color(0xFFE2E8F0),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.event_available_outlined,
+                                              size: 18,
+                                              color: _selectedExpiryDate != null
+                                                  ? AppColors.primary
+                                                  : const Color(0xFF94A3B8),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              _selectedExpiryDate ?? 'วว/ดด/ปปปป',
+                                              style: AppTypography.body2.copyWith(
+                                                color: _selectedExpiryDate != null
+                                                    ? null
+                                                    : const Color(0xFF94A3B8),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Card 2: Address
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.home_outlined,
+                                color: AppColors.primary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'ที่อยู่ตามทะเบียนบ้าน',
+                                style: AppTypography.label1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+                          _buildFieldLabel('ที่อยู่'),
+                          TextField(
+                            controller: _addressController,
+                            maxLines: 2,
+                            decoration: const InputDecoration(
+                              hintText: 'เลขที่บ้าน, หมู่ที่, ซอย, ถนน',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _buildFieldLabel('จังหวัด'),
+                          _buildDropdownCard(
+                            _selectedProvince,
+                            'เลือกจังหวัด',
+                            ['กรุงเทพมหานคร', 'เชียงใหม่', 'ภูเก็ต'],
+                            (val) {
+                              setState(() => _selectedProvince = val);
+                              _validateInput();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('เขต/อำเภอ'),
+                                    _buildDropdownCard(
+                                      _selectedDistrict,
+                                      'เลือก',
+                                      ['เขตบางรัก', 'เขตปทุมวัน'],
+                                      (val) {
+                                        setState(() => _selectedDistrict = val);
+                                        _validateInput();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel('แขวง/ตำบล'),
+                                    _buildDropdownCard(
+                                      _selectedSubdistrict,
+                                      'เลือก',
+                                      ['แขวงลุมพินี', 'แขวงสีลม'],
+                                      (val) {
+                                        setState(
+                                          () => _selectedSubdistrict = val,
+                                        );
+                                        _validateInput();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          _buildFieldLabel('รหัสไปรษณีย์'),
+                          TextField(
+                            controller: _zipcodeController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: '10xxx',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('วัน/เดือน/ปีเกิด (ปีค.ศ.)'),
-                    Container(
-                      decoration: BoxDecoration(
-                         color: AppColors.semanticGrayNeutralBgLightGray,
-                         borderRadius: BorderRadius.circular(12),
-                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                       ),
-                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                       child: InkWell(
-                        onTap: () {
-                          setState(() {
-                             _selectedBirthDate = '1990/01/01';
-                             _validateInput();
-                          });
-                        },
-                         child: Row(
-                           children: [
-                             const Icon(Icons.calendar_today, color: AppColors.semanticGrayNeutralFgHigh),
-                             const SizedBox(width: 12),
-                             Text(
-                               _selectedBirthDate ?? 'เลือก',
-                               style: AppTypography.body2.copyWith(
-                                 color: _selectedBirthDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgMidOnWhite
-                               ),
-                             ),
-                             const Spacer(),
-                             const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                           ],
-                         ),
-                       ),
-                    ),
-                    const SizedBox(height: 16),
-                     _buildTextFieldLabel('วันหมดอายุบัตรประชาชน'),
-                    Container(
-                      decoration: BoxDecoration(
-                         color: AppColors.semanticGrayNeutralBgLightGray,
-                         borderRadius: BorderRadius.circular(12),
-                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                       ),
-                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                       child: InkWell(
-                        onTap: () {
-                          setState(() {
-                             _selectedExpiryDate = '2030/12/31';
-                             _validateInput();
-                          });
-                        },
-                         child: Row(
-                           children: [
-                             const Icon(Icons.calendar_today, color: AppColors.semanticGrayNeutralFgHigh),
-                             const SizedBox(width: 12),
-                             Text(
-                               _selectedExpiryDate ?? 'เลือก',
-                               style: AppTypography.body2.copyWith(
-                                 color: _selectedExpiryDate != null ? AppColors.semanticGrayNeutralFgHigh : AppColors.semanticGrayNeutralFgMidOnWhite
-                               ),
-                             ),
-                             const Spacer(),
-                             const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                           ],
-                         ),
-                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ที่อยู่'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: TextField(
-                        controller: _addressController,
-                        maxLines: 3,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: 'กรอกรายละเอียดตามบัตรประชาชน โดยไม่ต้องระบุตำบล อำเภอ และ จังหวัด',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                        onChanged: (_) => _validateInput(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('จังหวัด'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedProvince,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['กรุงเทพมหานคร', 'เชียงใหม่', 'ภูเก็ต'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedProvince = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('อำเภอ / เขต'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedDistrict,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['คลองสาน', 'บางรัก', 'ปทุมวัน'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedDistrict = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ตำบล / แขวง'),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedSubdistrict,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['คลองต้นไทร', 'บางลำภูล่าง', 'สมเด็จเจ้าพระยา'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedSubdistrict = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('รหัสไปรษณีย์'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: TextField(
-                        controller: _zipcodeController,
-                        keyboardType: TextInputType.number,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: 'เช่น 10600',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                        onChanged: (_) => _validateInput(),
-                      ),
-                    ),
-                     Padding(
-                       padding: const EdgeInsets.only(top: 8.0),
-                       child: Text('กรอกรหัสไปรษณีย์ 5 หลัก', style: AppTypography.caption3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                     ),
-                    const SizedBox(height: 32),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                              children: [
-                                const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
-                                TextSpan(
-                                  text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
-                                ),
-                                const TextSpan(text: ' ของเรา'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 48),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
+            // Bottom Button
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isInputValid ? () {
-                    context.push('/register/bank_info');
-                  } : null,
+                  onPressed: _isInputValid
+                      ? () {
+                          context.push('/register/bank_info');
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                    elevation: 0,
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
+                  child: const Text('ดำเนินการต่อ'),
                 ),
               ),
             ),

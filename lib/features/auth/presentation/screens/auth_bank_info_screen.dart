@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
 
 class AuthBankInfoScreen extends StatefulWidget {
   const AuthBankInfoScreen({super.key});
@@ -11,10 +13,13 @@ class AuthBankInfoScreen extends StatefulWidget {
 }
 
 class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
-  final TextEditingController _accountOwnerController = TextEditingController(text: 'นาย ธนนันต์ อนุรักษ์');
+  final TextEditingController _accountOwnerController = TextEditingController(
+    text: '',
+  );
   String? _selectedBank;
-  final TextEditingController _accountNumberController = TextEditingController();
-  
+  final TextEditingController _accountNumberController =
+      TextEditingController();
+
   bool _isInputValid = false;
 
   @override
@@ -26,9 +31,10 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
 
   void _validateInput() {
     setState(() {
-      _isInputValid = _accountOwnerController.text.isNotEmpty &&
+      _isInputValid =
+          _accountOwnerController.text.isNotEmpty &&
           _selectedBank != null &&
-          _accountNumberController.text.isNotEmpty;
+          _accountNumberController.text.length >= 10;
     });
   }
 
@@ -39,16 +45,83 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
     super.dispose();
   }
 
-  Widget _buildTextFieldLabel(String label, {bool isRequired = true}) {
+  Widget _buildFieldLabel(String label, {bool isRequired = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: RichText(
         text: TextSpan(
           text: label,
-          style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
+          style: AppTypography.label2.copyWith(
+            color: AppColors.semanticGrayNeutralFgHigh,
+            fontWeight: FontWeight.bold,
+          ),
           children: isRequired
-              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
+              ? [
+                  TextSpan(
+                    text: ' *',
+                    style: AppTypography.label2.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ]
               : [],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBankCard(
+    String name,
+    String iconUrl,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.05)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : const Color(0xFFE2E8F0),
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.account_balance,
+                size: 18,
+                color: Color(0xFF64748B),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                name,
+                style: AppTypography.body2.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle,
+                color: AppColors.primary,
+                size: 20,
+              ),
+          ],
         ),
       ),
     );
@@ -57,318 +130,279 @@ class _AuthBankInfoScreenState extends State<AuthBankInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 6 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              height: 4,
-              width: double.infinity,
-              color: AppColors.semanticGrayNeutralBgLightGray,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * (6 / 7),
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'ใกล้เรียบร้อยแล้ว! โปรดกรอก\nข้อมูลธนาคารและการเงิน',
-                      style: AppTypography.heading3.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Mass จำเป็นต้องขอบัญชีธนาคาร เพื่อยืนยันข้อมูลธนาคาร\nและดำเนินการธุรกรรมการเงินกับคุณ ซึ่งรายได้จะถูกโอน\nผ่านทางบัญชีธนาคารที่คุณลงทะเบียน',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
+                    const AuthStepIndicator(currentStep: 6),
                     const SizedBox(height: 32),
                     Text(
-                      'ข้อมูลบัญชีธนาคาร',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('เจ้าของบัญชี'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
+                      'ข้อมูลธนาคาร',
+                      style: AppTypography.heading3.copyWith(
+                        color: AppColors.semanticGrayNeutralFgHigh,
+                        fontWeight: FontWeight.w900,
                       ),
-                      child: TextField(
-                        controller: _accountOwnerController,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: 'ชื่อ-นามสกุล',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                        onChanged: (_) => _validateInput(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ชื่อธนาคาร'),
-                     Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                       decoration: BoxDecoration(
-                         color: AppColors.semanticGrayNeutralBgLightGray,
-                         borderRadius: BorderRadius.circular(12),
-                         border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                       ),
-                       child: DropdownButtonHideUnderline(
-                         child: DropdownButton<String>(
-                          value: _selectedBank,
-                          dropdownColor: AppColors.semanticGrayNeutralBgWhite,
-                          hint: Text('เลือก', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          items: <String>['กสิกรไทย', 'ไทยพาณิชย์', 'กรุงไทย'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedBank = newValue;
-                              _validateInput();
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('เลขบัญชี'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      child: TextField(
-                        controller: _accountNumberController,
-                        keyboardType: TextInputType.number,
-                        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                        decoration: InputDecoration(
-                          hintText: '8888888888',
-                          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        ),
-                        onChanged: (_) => _validateInput(),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                     Text(
-                      'เอกสารที่ต้องใช้',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Mass จำเป็นต้องขอบัญชีธนาคาร เพื่อยืนยันข้อมูลธนาคาร\nและดำเนินการธุรกรรมการเงินกับคุณ',
-                      style: AppTypography.caption3.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 16),
-                    // Image picker representation 1
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
+                      'รายได้จากการขายจะถูกโอนเข้าบัญชีธนาคารที่คุณระบุไว้ด้านล่างนี้',
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                        height: 1.5,
                       ),
-                      child: Row(
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Card 1: Bank Details
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
-                          const SizedBox(width: 16),
-                          Expanded(
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.account_balance_outlined,
+                                color: AppColors.primary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'รายละเอียดบัญชี',
+                                style: AppTypography.label1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+                          _buildFieldLabel('เจ้าของบัญชี'),
+                          TextField(
+                            controller: _accountOwnerController,
+                            decoration: InputDecoration(
+                              labelStyle: AppTypography.body2,
+                              hintText: 'ระบุชื่อภาษาอังกฤษตามสมุดบัญชี',
+                              hintStyle: AppTypography.body2.copyWith(
+                                color: const Color(0xFF94A3B8),
+                              ),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _buildFieldLabel('ธนาคาร'),
+                          _buildBankCard(
+                            'กสิกรไทย (K-Bank)',
+                            '',
+                            _selectedBank == 'กสิกรไทย',
+                            () {
+                              setState(() => _selectedBank = 'กสิกรไทย');
+                              _validateInput();
+                            },
+                          ),
+                          _buildBankCard(
+                            'ไทยพาณิชย์ (SCB)',
+                            '',
+                            _selectedBank == 'ไทยพาณิชย์',
+                            () {
+                              setState(() => _selectedBank = 'ไทยพาณิชย์');
+                              _validateInput();
+                            },
+                          ),
+                          _buildBankCard(
+                            'กรุงไทย (KTB)',
+                            '',
+                            _selectedBank == 'กรุงไทย',
+                            () {
+                              setState(() => _selectedBank = 'กรุงไทย');
+                              _validateInput();
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          _buildFieldLabel('เลขที่บัญชี'),
+                          TextField(
+                            controller: _accountNumberController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: '000-0-00000-0',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Card 2: Document
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'เอกสารที่ต้องใช้',
+                            style: AppTypography.label1.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 24),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: const Color(0xFFE2E8F0),
+                                style: BorderStyle.solid,
+                              ),
+                            ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: 'รูปถ่ายสมุดบัญชีธนาคาร',
-                                    style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                                    children: [
-                                      TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh)),
-                                    ],
+                                const Icon(
+                                  Icons.cloud_upload_outlined,
+                                  color: AppColors.primary,
+                                  size: 32,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'อัปโหลดรูปหน้าสมุดบัญชี',
+                                  style: AppTypography.label2.copyWith(
+                                    color: AppColors.semanticGrayNeutralFgHigh,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text('ไฟล์ .pdf .jpg หรือ .png', style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite)),
+                                Text(
+                                  'JPG, PNG หรือ PDF (ไม่เกิน 5MB)',
+                                  style: AppTypography.caption5.copyWith(
+                                    color: const Color(0xFF94A3B8),
+                                  ),
+                                ),
                               ],
                             ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.info_outline,
+                                size: 16,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'ชื่อบัญชีธนาคารต้องตรงกับชื่อที่ใช้ลงทะเบียนสมัครสมาชิก',
+                                  style: AppTypography.caption5.copyWith(
+                                    color: const Color(0xFF64748B),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+
+                    const SizedBox(height: 24),
+
+                    // Card 3: Finance Manager Summary
                     Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary, width: 0.5),
-                      ),
-                      child: Row(
+                      padding: const EdgeInsets.all(24),
+                      decoration: AppTheme.premiumCardDecoration,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.info, color: AppColors.primary, size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'ชื่อเจ้าของบัญชีธนาคารที่คุณอัปโหลด ต้องตรง\nตามชื่อที่ใช้ลงทะเบียนในการสมัครเท่านั้น',
-                              style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'ผู้จัดการฝ่ายการเงิน',
+                                style: AppTypography.label1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.edit_outlined,
+                                size: 18,
+                                color: AppColors.primary,
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+                          Text(
+                            'นาย ธนนันต์ อนุรักษ์',
+                            style: AppTypography.body2,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '+66 892616445 | bankzapse@gmail.com',
+                            style: AppTypography.caption5.copyWith(
+                              color: const Color(0xFF64748B),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                     Text(
-                      'เอกสารเพิ่มเติม (ไม่บังคับ)',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'โปรดอัปโหลดเอกสารเพิ่มเติม ในกรณีดังต่อไปนี้\n• หนังสือรับรองการเปลี่ยนชื่อ-สกุล หรือใบทะเบียนสมรส\n   หย่า หากชื่อเจ้าของบัญชีไม่ตรงตามชื่อที่ใช้ลงทะเบียน\n• บัตรประชาชนของทุกบุคคล หากใช้บัญชีร่วม',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 16),
-                    // Image picker representation 2
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-                        decoration: BoxDecoration(
-                          color: AppColors.semanticGrayNeutralBgLightGray,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray, style: BorderStyle.solid),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.add, color: AppColors.semanticGrayNeutralFgHigh),
-                            const SizedBox(height: 8),
-                            Text('เพิ่มไฟล์', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh))
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      'ผู้จัดการฝ่ายการเงิน',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Mass จะใช้ข้อมูลนี้สำหรับกรณีที่ต้องติดต่อเกี่ยวกับบัญชี\nธนาคาร ข้อมูลใบแจ้งหนี้ หรือใบกำกับภาษี',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 24),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('ชื่อผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('นาย ธนนันต์ อนุรักษ์', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('เบอร์เจ้าของร้าน/ผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('+66 892616445', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                        const SizedBox(height: 16),
-                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('อีเมลเจ้าของร้าน/ผู้จัดการฝ่ายการเงิน'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('bankzapse@gmail.com', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                              children: [
-                                const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
-                                TextSpan(
-                                  text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
-                                ),
-                                const TextSpan(text: ' ของเรา'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 48),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
+            // Bottom Button
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isInputValid ? () {
-                    context.push('/register/confirmation');
-                  } : null,
+                  onPressed: _isInputValid
+                      ? () {
+                          context.push('/register/confirmation');
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                    elevation: 0,
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
                   ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
+                  child: const Text('บันทึกและดำเนินการต่อ'),
                 ),
               ),
             ),

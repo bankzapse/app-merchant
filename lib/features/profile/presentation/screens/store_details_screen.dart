@@ -28,7 +28,7 @@ class StoreDetailsScreen extends ConsumerWidget {
         ),
       ),
       body: profileAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00B14F))),
+        loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFE5002B))),
         error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e')),
         data: (profile) => SingleChildScrollView(
           child: Column(
@@ -113,11 +113,11 @@ class StoreDetailsScreen extends ConsumerWidget {
                 child: SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
-                    icon: const Icon(Icons.share_outlined, color: Color(0xFF00B14F)),
+                    icon: const Icon(Icons.share_outlined, color: Color(0xFFE5002B)),
                     label: const Text('แชร์ลิงก์ร้าน Grab',
-                        style: TextStyle(color: Color(0xFF00B14F), fontWeight: FontWeight.w600)),
+                        style: TextStyle(color: Color(0xFFE5002B), fontWeight: FontWeight.w600)),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF00B14F), width: 1.5),
+                      side: const BorderSide(color: Color(0xFFE5002B), width: 1.5),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
@@ -165,7 +165,7 @@ class StoreDetailsScreen extends ConsumerWidget {
                     style: AppTypography.body3.copyWith(color: const Color(0xFF888888))),
               Text(profile.platform,
                   style: AppTypography.body3
-                      .copyWith(color: const Color(0xFF00B14F), fontWeight: FontWeight.w500)),
+                      .copyWith(color: const Color(0xFFE5002B), fontWeight: FontWeight.w500)),
             ],
           ),
         ],
@@ -219,7 +219,7 @@ class StoreDetailsScreen extends ConsumerWidget {
           Row(
             children: [
               if (subtitle != null)
-                Text(subtitle, style: AppTypography.body3.copyWith(color: const Color(0xFF00B14F))),
+                Text(subtitle, style: AppTypography.body3.copyWith(color: const Color(0xFFE5002B))),
               const Icon(Icons.chevron_right, color: Color(0xFF888888)),
             ],
           ),
@@ -271,7 +271,7 @@ class StoreDetailsScreen extends ConsumerWidget {
               ),
             );
           },
-          child: const Icon(Icons.copy_outlined, size: 18, color: Color(0xFF00B14F)),
+          child: const Icon(Icons.copy_outlined, size: 18, color: Color(0xFFE5002B)),
         ),
       ],
     );
@@ -294,7 +294,7 @@ class StoreDetailsScreen extends ConsumerWidget {
           onPressed: () {},
           child: Text(
             'สร้างรหัส OTP',
-            style: AppTypography.label3.copyWith(color: const Color(0xFF00B14F)),
+            style: AppTypography.label3.copyWith(color: const Color(0xFFE5002B)),
           ),
         ),
       ],

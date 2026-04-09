@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_colors.dart';
+import 'package:merchant_app/core/theme/app_theme.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/auth/presentation/widgets/auth_step_indicator.dart';
 
 class AuthBusinessInfoScreen extends StatefulWidget {
   const AuthBusinessInfoScreen({super.key});
@@ -15,7 +17,7 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
   final _addressController = TextEditingController();
   final _detailsController = TextEditingController();
   final _contactNameController = TextEditingController();
-  
+
   bool _isInputValid = false;
 
   @override
@@ -28,7 +30,8 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
 
   void _validateInput() {
     setState(() {
-      _isInputValid = _storeNameController.text.isNotEmpty &&
+      _isInputValid =
+          _storeNameController.text.isNotEmpty &&
           _addressController.text.isNotEmpty &&
           _contactNameController.text.isNotEmpty;
     });
@@ -43,35 +46,26 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
     super.dispose();
   }
 
-  Widget _buildTextFieldLabel(String label, {bool isRequired = true}) {
+  Widget _buildFieldLabel(String label, {bool isRequired = true}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: RichText(
         text: TextSpan(
           text: label,
-          style: AppTypography.label2.copyWith(color: AppColors.semanticGrayNeutralFgHigh, fontWeight: FontWeight.normal),
+          style: AppTypography.label2.copyWith(
+            color: AppColors.semanticGrayNeutralFgHigh,
+            fontWeight: FontWeight.bold,
+          ),
           children: isRequired
-              ? [TextSpan(text: ' *', style: AppTypography.label2.copyWith(color: AppColors.semanticErrorFgHigh))]
+              ? [
+                  TextSpan(
+                    text: ' *',
+                    style: AppTypography.label2.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ]
               : [],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hint) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-      ),
-      child: TextField(
-        controller: controller,
-        style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -80,189 +74,148 @@ class _AuthBusinessInfoScreenState extends State<AuthBusinessInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: AppColors.semanticGrayNeutralBgWhite,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.semanticGrayNeutralFgHigh),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'ขั้นตอนที่ 3 จาก 7',
-          style: AppTypography.heading6.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-        ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.semanticGrayNeutralFgHigh),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 4,
-              width: double.infinity,
-              color: AppColors.semanticGrayNeutralBgLightGray,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * (3 / 7),
-                  color: AppColors.primary,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AuthStepIndicator(currentStep: 3),
+              const SizedBox(height: 32),
+              Text(
+                'ข้อมูลธุรกิจ',
+                style: AppTypography.heading3.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+              const SizedBox(height: 8),
+              Text(
+                'ระบุรายละเอียดร้านค้าของคุณเพื่อให้ลูกค้าเข้าถึงและรู้จักแบรนด์ได้ง่ายขึ้น',
+                style: AppTypography.body2.copyWith(
+                  color: AppColors.semanticGrayNeutralFgMidOnWhite,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Business Form Card
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: AppTheme.premiumCardDecoration,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'ลงทะเบียน',
-                      style: AppTypography.heading3.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'โปรดกรอกข้อมูลเพื่อแสดงให้ลูกค้าดู',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'ข้อมูลธุรกิจ',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ชื่อร้านค้า'),
-                    _buildTextField(_storeNameController, 'ตัวอย่าง: กล้วยทอดมหาชัย'),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ชื่ออาคาร/ถนน'),
-                    _buildTextField(_addressController, 'เช่น ไอคอนสยาม หรือ ซอยสุขุมวิท'),
-                    const SizedBox(height: 8),
-                    Text(
-                      'ชื่อร้านของคุณจะปรากฏบนแอป Mass ในรูปแบบต่อไปนี้: (ชื่อแบรนด์) - (ชื่ออาคาร/ชื่อถนน)',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ที่ตั้งร้านค้า'),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.semanticGrayNeutralBgLightGray,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.semanticGrayNeutralBorderLightGray),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.location_on, color: AppColors.semanticGrayNeutralFgHigh),
-                          const SizedBox(width: 12),
-                          Text(
-                            'เลือกหมุดร้านค้าของคุณ',
-                            style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                          ),
-                          const Spacer(),
-                          const Icon(Icons.chevron_right, color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                        ],
+                    _buildFieldLabel('ชื่อร้านค้า'),
+                    TextField(
+                      controller: _storeNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'เช่น กล้วยทอดมหาชัย',
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('รายละเอียดร้านค้าเพิ่มเติม', isRequired: false),
-                    _buildTextField(_detailsController, 'เช่น หลังคาสีแดงติดกับประตูโรงเรียน'),
-                    const SizedBox(height: 8),
-                    Text(
-                      'ช่วยให้คนขับและลูกค้าพบร้านของคุณ',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      'ข้อมูลติดต่อ (เจ้าของร้าน/ผู้จัดการร้าน)',
-                      style: AppTypography.heading5.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'ข้อมูลนี้จะใช้สำหรับกรณีต้องติดต่อกับร้านค้าเพื่อดำเนินการ\nต่างๆ เช่น การส่งสัญญา การแจ้งเตือนข้อมูลข่าวสาร',
-                      style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextFieldLabel('ชื่อผู้ติดต่อ'),
-                    _buildTextField(_contactNameController, 'ตัวอย่าง: น.ส. สมหญิง ใจงาม'),
                     const SizedBox(height: 24),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('เบอร์เจ้าของร้าน/ผู้จัดการร้าน'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('+66 892616445', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildTextFieldLabel('อีเมลเจ้าของร้าน/ผู้จัดการร้าน'),
-                            const Icon(Icons.edit, color: AppColors.semanticSecondaryFgHigh, size: 16),
-                          ],
-                        ),
-                        Text('test@example.com', style: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh)),
-                      ],
+                    _buildFieldLabel('ชื่ออาคาร/ถนน'),
+                    TextField(
+                      controller: _addressController,
+                      decoration: const InputDecoration(
+                        hintText: 'เช่น ไอคอนสยาม หรือ ซอยสุขุมวิท',
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                      ),
                     ),
                     const SizedBox(height: 24),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.shield_outlined, color: AppColors.semanticGrayNeutralFgHigh, size: 20),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: AppTypography.caption5.copyWith(color: AppColors.semanticGrayNeutralFgMidOnWhite),
-                              children: [
-                                const TextSpan(text: 'ข้อมูลจะได้รับการจัดเก็บภายใต้ '),
-                                TextSpan(
-                                  text: 'นโยบายความเป็นส่วนตัว',
-                                  style: AppTypography.caption5.copyWith(color: AppColors.semanticSecondaryFgHigh),
-                                ),
-                                const TextSpan(text: ' ของเรา'),
-                              ],
+                    _buildFieldLabel('ที่ตั้งร้านค้า'),
+                    InkWell(
+                      onTap: () {}, // Map picker logic
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              color: AppColors.primary,
                             ),
-                          ),
+                            SizedBox(width: 12),
+                            Text('เลือกหมุดร้านค้าของคุณ'),
+                            Spacer(),
+                            Icon(Icons.chevron_right, color: Color(0xFF94A3B8)),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isInputValid ? () {
-                    context.push('/register/business_type');
-                  } : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isInputValid ? AppColors.primary : AppColors.semanticGrayNeutralBgLightGray,
-                    foregroundColor: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite,
-                    disabledBackgroundColor: AppColors.semanticGrayNeutralBgLightGray,
-                    disabledForegroundColor: AppColors.semanticGrayNeutralFgMidOnWhite,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+
+              const SizedBox(height: 24),
+
+              // Contact Form Card
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: AppTheme.premiumCardDecoration,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ข้อมูลติดต่อ (เจ้าของร้าน)',
+                      style: AppTypography.heading6.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  child: Text('บันทึกและดำเนินการต่อ', style: AppTypography.label2.copyWith(color: _isInputValid ? Colors.white : AppColors.semanticGrayNeutralFgMidOnWhite)),
+                    const SizedBox(height: 20),
+                    _buildFieldLabel('ชื่อผู้ติดต่อ'),
+                    TextField(
+                      controller: _contactNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'ระบุชื่อ-นามสกุล',
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 40),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isInputValid
+                      ? () {
+                          context.push('/register/business_type');
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: _isInputValid ? 8 : 0,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
+                  ),
+                  child: const Text('บันทึกและดำเนินการต่อ'),
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:merchant_app/core/theme/app_colors.dart';
 import 'package:merchant_app/core/theme/app_typography.dart';
+import 'package:merchant_app/features/home/presentation/widgets/status_bottom_sheet.dart';
 import 'package:merchant_app/features/home/providers/navigation_provider.dart';
 import 'package:merchant_app/features/home/providers/restaurant_provider.dart';
-import 'package:merchant_app/features/home/presentation/widgets/status_bottom_sheet.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -13,14 +14,17 @@ class DashboardScreen extends ConsumerWidget {
     final profileAsync = ref.watch(restaurantProfileProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: AppColors.semanticGrayNeutralBgWhite,
       body: SafeArea(
         child: profileAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
           error: (e, _) => Center(child: Text('เกิดข้อผิดพลาด: $e')),
           data: (profile) => RefreshIndicator(
-            color: const Color(0xFF00B14F),
-            onRefresh: () => ref.read(restaurantProfileProvider.notifier).fetchProfile(),
+            color: AppColors.primary,
+            onRefresh: () =>
+                ref.read(restaurantProfileProvider.notifier).fetchProfile(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -30,33 +34,21 @@ class DashboardScreen extends ConsumerWidget {
                   _buildHeader(context, profile),
                   const SizedBox(height: 16),
 
-                  // ─── Performance Section ─────────────────────────
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ประสิทธิภาพการขาย',
-                          style: AppTypography.heading5.copyWith(
-                            color: const Color(0xFF111111),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _buildStatusCards(context, ref, profile),
-                        const SizedBox(height: 20),
+                  // ─── Performance Summary (Hero) ──────────────────
+                  _buildPerformanceHero(context, ref, profile),
+                  const SizedBox(height: 24),
 
-                        // ─── Personalized Section ──────────────────
-                        _buildPersonalizedSection(),
-                        const SizedBox(height: 20),
+                  // ─── Operational Controls & Quick Glance ────────
+                  _buildOperationalSection(context, ref, profile),
+                  const SizedBox(height: 32),
 
-                        // ─── Quick Access Grid ─────────────────────
-                        _buildQuickAccessGrid(context, ref),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
+                  // ─── Action Hub (Quick Grid) ─────────────────────
+                  _buildActionHub(context, ref),
+                  const SizedBox(height: 32),
+
+                  // ─── Personalized Section ──────────────────
+                  _buildPersonalizedSection(),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
@@ -70,39 +62,76 @@ class DashboardScreen extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context, RestaurantProfile profile) {
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Row(
         children: [
-          const Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF333333)),
-          const SizedBox(width: 6),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.storefront_outlined,
+              size: 24,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               '${profile.name}${profile.branch.isNotEmpty ? ' ${profile.branch}' : ''}',
-              style: AppTypography.body2.copyWith(
-                color: const Color(0xFF111111),
-                fontWeight: FontWeight.w600,
+              style: AppTypography.heading6.copyWith(
+                color: AppColors.semanticGrayNeutralFgHigh,
+                fontWeight: FontWeight.w900,
               ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Stack(
+            clipBehavior: Clip.none,
             children: [
-              const Icon(Icons.notifications_outlined, size: 26, color: Color(0xFF333333)),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.notifications_none_outlined,
+                  size: 24,
+                  color: Color(0xFF475569),
+                ),
+              ),
               Positioned(
-                right: 0,
-                top: 0,
+                right: -2,
+                top: -2,
                 child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE74C3C),
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
                     shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
                   child: const Center(
                     child: Text(
                       '9',
-                      style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -116,131 +145,386 @@ class DashboardScreen extends ConsumerWidget {
 
   // ─── STATUS CARDS ────────────────────────────────────────────────────────────
 
-  Widget _buildStatusCards(
+  // ─── PERFORMANCE HERO ───────────────────────────────────────────────────────
+
+  Widget _buildPerformanceHero(
     BuildContext context,
     WidgetRef ref,
     RestaurantProfile profile,
   ) {
-    final isOpen = profile.status == RestaurantStatus.open;
-    final statusColor = _statusColor(profile.status);
-    final statusLabel = _statusLabel(profile.status);
-
-    return Row(
-      children: [
-        // Status card (left)
-        Expanded(
-          child: GestureDetector(
-            onTap: () => _showStatusSheet(context, ref, profile),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: isOpen ? const Color(0xFF00B14F) : _statusBgColor(profile.status),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Pill
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withOpacity(0.4)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: statusColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          statusLabel,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    '${profile.preparingCount}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  const Text(
-                    'กำลังเตรียม',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: _getStatusGradient(profile.status),
+          begin: Alignment.bottomRight,
+          end: Alignment.bottomLeft,
         ),
-        const SizedBox(width: 12),
-        // Revenue card (right)
-        Expanded(
-          child: GestureDetector(
-            onTap: () => ref.read(navigationProvider.notifier).state = 3,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFEEEEEE)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _statusBgColor(profile.status).withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: () => _showStatusSheet(context, ref, profile),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'ยอดขายวันนี้',
+                  style: AppTypography.heading4.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
                     children: [
-                      const Icon(Icons.show_chart, size: 20, color: Color(0xFF888888)),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _statusColor(profile.status),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                       const SizedBox(width: 6),
                       Text(
-                        'รายได้วันนี้',
-                        style: AppTypography.body3.copyWith(color: const Color(0xFF555555)),
+                        _statusLabel(profile.status),
+                        style: AppTypography.label2.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    '฿',
-                    style: TextStyle(color: Color(0xFF888888), fontSize: 14),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '฿',
+                  style: AppTypography.heading4.copyWith(
+                    color: Colors.white.withOpacity(0.8),
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    profile.todayRevenue.toStringAsFixed(2),
-                    style: const TextStyle(
-                      color: Color(0xFF111111),
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  profile.todayRevenue.toStringAsFixed(0),
+                  style: AppTypography.heading1.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${profile.todayOrders} คำสั่งซื้อ',
-                    style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _heroMetric(
+                    'คำสั่งซื้อวันนี้',
+                    '${profile.todayOrders} รายการ',
+                  ),
+                  Container(
+                    width: 1,
+                    height: 24,
+                    color: Colors.white.withOpacity(0.2),
+                  ),
+                  _heroMetric(
+                    'กำลังเตรียม',
+                    '${profile.preparingCount} รายการ',
                   ),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _heroMetric(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTypography.caption4.copyWith(color: Colors.white),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: AppTypography.body1.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],
+    );
+  }
+
+  // ─── OPERATIONAL SECTION ──────────────────────────────────────────────────────
+
+  Widget _buildOperationalSection(
+    BuildContext context,
+    WidgetRef ref,
+    RestaurantProfile profile,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'การจัดการหน้าร้าน',
+            style: AppTypography.heading4.copyWith(
+              color: AppColors.semanticGrayNeutralFgHigh,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildStatusPill(context, ref, profile),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusPill(
+    BuildContext context,
+    WidgetRef ref,
+    RestaurantProfile profile,
+  ) {
+    final statusColor = _statusBgColor(profile.status);
+    return GestureDetector(
+      onTap: () => _showStatusSheet(context, ref, profile),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: const Color(0xFFF1F5F9)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: statusColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _statusIcon(profile.status),
+                color: statusColor,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'สถานะ: ${_statusLabel(profile.status)}',
+                    style: AppTypography.body2.copyWith(
+                      color: AppColors.semanticGrayNeutralFgHigh,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'คลิกเพื่อเปลี่ยนสถานะร้านของคุณ',
+                    style: AppTypography.caption5.copyWith(
+                      color: const Color(0xFF64748B),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: Color(0xFF94A3B8),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _statusIcon(RestaurantStatus s) {
+    switch (s) {
+      case RestaurantStatus.open:
+        return Icons.check_circle_rounded;
+      case RestaurantStatus.busy:
+        return Icons.access_time_filled_rounded;
+      case RestaurantStatus.paused:
+        return Icons.pause_circle_filled_rounded;
+    }
+  }
+
+  // ─── ACTION HUB ─────────────────────────────────────────────────────────────
+
+  Widget _buildActionHub(BuildContext context, WidgetRef ref) {
+    final items = [
+      _QuickItem(
+        'คำสั่งซื้อ',
+        Icons.receipt_long_rounded,
+        null,
+        () => ref.read(navigationProvider.notifier).state = 1,
+      ),
+      _QuickItem(
+        'เมนู',
+        Icons.restaurant_menu_rounded,
+        null,
+        () => ref.read(navigationProvider.notifier).state = 2,
+      ),
+      _QuickItem(
+        'ยอดขาย',
+        Icons.query_stats_rounded,
+        null,
+        () => ref.read(navigationProvider.notifier).state = 3,
+      ),
+      _QuickItem('ผู้ช่วย AI', Icons.auto_awesome_rounded, 'ใหม่', () {}),
+      _QuickItem('โปรโมชัน', Icons.campaign_rounded, 'ยอดฮิต', () {}),
+      _QuickItem('พนักงาน', Icons.people_alt_rounded, null, () {}),
+      _QuickItem('หน้าร้าน', Icons.store_rounded, null, () {}),
+      _QuickItem('ประวัติ', Icons.history_rounded, null, () {}),
+      _QuickItem('พรรทเนอร์', Icons.stars_rounded, null, () {}),
+      _QuickItem('เพิ่มเติม', Icons.grid_view_rounded, null, () {}),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'เมนูด่วน (Action Hub)',
+            style: AppTypography.heading4.copyWith(
+              color: AppColors.semanticGrayNeutralFgHigh,
+            ),
+          ),
+          const SizedBox(height: 16),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.7,
+            ),
+            itemCount: items.length,
+            itemBuilder: (context, i) => _buildGridItem(items[i]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridItem(_QuickItem item) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  border: Border.all(color: const Color(0xFFF1F5F9)),
+                ),
+                child: Icon(
+                  item.icon,
+                  size: 24,
+                  color: const Color(0xFF334155),
+                ),
+              ),
+              if (item.badge != null)
+                Positioned(
+                  top: -6,
+                  right: -6,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: item.badge == 'ยอดฮิต'
+                          ? AppColors.primary
+                          : const Color(0xFFF59E0B),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: Text(
+                      item.badge!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            item.label,
+            style: AppTypography.caption5.copyWith(
+              color: const Color(0xFF475569),
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -249,20 +533,31 @@ class DashboardScreen extends ConsumerWidget {
       case RestaurantStatus.open:
         return Colors.white;
       case RestaurantStatus.busy:
-        return const Color(0xFFFFA500);
+        return const Color(0xFFFEF08A);
       case RestaurantStatus.paused:
-        return const Color(0xFFFF6B6B);
+        return const Color(0xFFFCA5A5);
     }
   }
 
   Color _statusBgColor(RestaurantStatus s) {
     switch (s) {
       case RestaurantStatus.open:
-        return const Color(0xFF00B14F);
+        return AppColors.foundationGreen600;
       case RestaurantStatus.busy:
-        return const Color(0xFFD4870A);
+        return AppColors.foundationYellow400;
       case RestaurantStatus.paused:
-        return const Color(0xFFB71C1C);
+        return AppColors.foundationRed700;
+    }
+  }
+
+  List<Color> _getStatusGradient(RestaurantStatus s) {
+    switch (s) {
+      case RestaurantStatus.open:
+        return [AppColors.foundationGreen600, AppColors.foundationGreen600];
+      case RestaurantStatus.busy:
+        return [AppColors.foundationYellow400, AppColors.foundationYellow400];
+      case RestaurantStatus.paused:
+        return [AppColors.foundationRed700, AppColors.foundationRed700];
     }
   }
 
@@ -283,38 +578,57 @@ class DashboardScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'สำหรับคุณโดยเฉพาะ',
-              style: AppTypography.heading6.copyWith(
-                color: const Color(0xFF111111),
-                fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'สำหรับคุณโดยเฉพาะ',
+                style: AppTypography.heading4.copyWith(
+                  color: AppColors.semanticGrayNeutralFgHigh,
+                ),
               ),
-            ),
-            Text(
-              '2/2',
-              style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
-            ),
-          ],
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE2E8F0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '2/2',
+                  style: AppTypography.caption5.copyWith(
+                    color: const Color(0xFF475569),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         SizedBox(
-          height: 100,
+          height: 110,
           child: PageView(
+            controller: PageController(viewportFraction: 0.9),
+            padEnds: false,
             children: [
               _buildPromoCard(
-                icon: '🛵',
-                title: 'เพิ่มยอดคำสั่งซื้อได้ 21% เพียงให้ส่วนลดค่าส่ง',
-                actionText: 'ดูข้อมูลเพิ่มเติม!',
-                color: const Color(0xFFFFF8F0),
+                icon: '🚀',
+                title: 'เพิ่มยอดคำสั่งซื้อได้ 21% เพียงให้ส่วนลดค่าส่ง!',
+                actionText: 'ดูข้อมูลเพิ่มเติม',
+                color: const Color(0xFFFEF2F2),
+                borderColor: const Color(0xFFFECACA),
               ),
               _buildPromoCard(
-                icon: '🏆',
-                title: 'ร้านดีการันตีคุณภาพ – ทำตามเป้าหมายทั้งหมดภายในสิ้นเดือนนี้',
-                actionText: 'ดูรายละเอียด >',
-                color: const Color(0xFFF0F8FF),
+                icon: '👑',
+                title: 'ร้านดีการันตีคุณภาพ – ทำเป้าหมายสำเร็จในสิ้นเดือน',
+                actionText: 'ดูรายละเอียด',
+                color: const Color(0xFFF8FAFC),
+                borderColor: const Color(0xFFE2E8F0),
               ),
             ],
           ),
@@ -328,29 +642,65 @@ class DashboardScreen extends ConsumerWidget {
     required String title,
     required String actionText,
     required Color color,
+    required Color borderColor,
   }) {
     return Container(
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(left: 20, right: 0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Text(icon, style: const TextStyle(fontSize: 36)),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Text(icon, style: const TextStyle(fontSize: 24)),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: AppTypography.body3.copyWith(color: const Color(0xFF333333))),
-                const SizedBox(height: 4),
                 Text(
-                  actionText,
-                  style: AppTypography.label3.copyWith(color: const Color(0xFF0066CC)),
+                  title,
+                  style: AppTypography.body3.copyWith(
+                    color: AppColors.semanticGrayNeutralFgHigh,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Text(
+                      actionText,
+                      style: AppTypography.label3.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 10,
+                      color: AppColors.primary,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -360,108 +710,18 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  // ─── QUICK ACCESS GRID ────────────────────────────────────────────────────────
-
-  Widget _buildQuickAccessGrid(BuildContext context, WidgetRef ref) {
-    final items = [
-      _QuickItem('คำสั่งซื้อ', Icons.receipt_long_outlined, null, () => ref.read(navigationProvider.notifier).state = 1),
-      _QuickItem('เมนู', Icons.menu_book_outlined, null, () => ref.read(navigationProvider.notifier).state = 2),
-      _QuickItem('ผู้ช่วย AI', Icons.auto_awesome, 'ใหม่', () {}),
-      _QuickItem('ร้านดีการันตีคุณภาพ', Icons.verified_outlined, null, () {}),
-      _QuickItem('ฟีดแบก', Icons.rate_review_outlined, null, () {}),
-      _QuickItem('ร้าน', Icons.store_outlined, null, () {}),
-      _QuickItem('เพิ่มยอดขาย', Icons.campaign_outlined, 'New', () {}),
-      _QuickItem('ข้อมูลเชิงลึก', Icons.timeline, 'ใหม่', () {}),
-      _QuickItem('พนักงาน', Icons.people_outline, null, () {}),
-      _QuickItem('Academy', Icons.school_outlined, null, () {}),
-      _QuickItem('แกร็บช้อป', Icons.shopping_cart_outlined, null, () {}),
-      _QuickItem('Smart Link', Icons.link, 'New', () {}),
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 8,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: items.length,
-      itemBuilder: (context, i) => _buildGridItem(items[i]),
-    );
-  }
-
-  Widget _buildGridItem(_QuickItem item) {
-    return GestureDetector(
-      onTap: item.onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFEEEEEE)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Icon(item.icon, size: 22, color: const Color(0xFF333333)),
-              ),
-              if (item.badge != null)
-                Positioned(
-                  top: -6,
-                  right: -8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: item.badge == 'New'
-                          ? const Color(0xFFE74C3C)
-                          : const Color(0xFFFF6B00),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      item.badge!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            item.label,
-            style: AppTypography.caption5.copyWith(color: const Color(0xFF444444)),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showStatusSheet(BuildContext context, WidgetRef ref, RestaurantProfile profile) {
+  void _showStatusSheet(
+    BuildContext context,
+    WidgetRef ref,
+    RestaurantProfile profile,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => StatusBottomSheet(
         currentStatus: profile.status,
-        onStatusChanged: (s) => ref.read(restaurantProfileProvider.notifier).setStatus(s),
+        onStatusChanged: (s) =>
+            ref.read(restaurantProfileProvider.notifier).setStatus(s),
       ),
     );
   }

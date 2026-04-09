@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 import 'app_typography.dart';
 
@@ -10,9 +11,11 @@ class AppTheme {
         primary: AppColors.primary,
         onPrimary: Colors.white,
         secondary: AppColors.primaryDark,
+        onSecondary: Colors.white,
         surface: AppColors.semanticGrayNeutralBgWhite,
-        error: AppColors.semanticErrorFgHigh,
         onSurface: AppColors.semanticGrayNeutralFgHigh,
+        error: AppColors.semanticErrorFgHigh,
+        onError: Colors.white,
       ),
       scaffoldBackgroundColor: AppColors.semanticGrayNeutralBgWhite,
       appBarTheme: const AppBarTheme(
@@ -56,37 +59,58 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.semanticGrayNeutralBgLightGray,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        labelStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgHigh),
+        fillColor: const Color(0xFFF8FAFC),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
+        labelStyle: AppTypography.body2.copyWith(
+          color: AppColors.semanticGrayNeutralFgHigh,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.semanticErrorFgHigh),
         ),
-        hintStyle: AppTypography.body2.copyWith(color: AppColors.semanticGrayNeutralFgLowOnWhite),
+        hintStyle: AppTypography.body1.copyWith(color: const Color(0xFF94A3B8)),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.semanticGrayNeutralBgWhite,
-        elevation: 2,
-        shadowColor: AppColors.foundationGrayscale200,
+        color: Colors.white,
+        elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: AppColors.semanticGrayNeutralBorderLightGray, width: 1),
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: Colors.black.withOpacity(0.05), width: 1),
         ),
         margin: EdgeInsets.zero,
       ),
+      tabBarTheme: TabBarThemeData(
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
+      ),
     );
   }
+
+  static BoxDecoration get premiumCardDecoration => BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        blurRadius: 20,
+        offset: const Offset(0, 10),
+      ),
+    ],
+    border: Border.all(color: Colors.black.withOpacity(0.05), width: 1),
+  );
 }

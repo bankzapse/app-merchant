@@ -60,35 +60,28 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
           const SizedBox(height: 16),
 
           // Options
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFEEEEEE)),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                _buildOption(
-                  status: RestaurantStatus.open,
-                  color: const Color(0xFF2ECC71),
-                  label: 'เปิดให้บริการ',
-                  subtitle: null,
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                _buildOption(
-                  status: RestaurantStatus.busy,
-                  color: const Color(0xFFF39C12),
-                  label: 'ยุ่ง',
-                  subtitle: 'ปรับเวลาเตรียมคำสั่งซื้อ',
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                _buildOption(
-                  status: RestaurantStatus.paused,
-                  color: const Color(0xFFE74C3C),
-                  label: 'หยุดชั่วคราว',
-                  subtitle: 'เปลี่ยนสถานะร้านของคุณ เพื่อกลับมารับคำสั่งซื้อต่อ',
-                ),
-              ],
-            ),
+          _buildOption(
+            status: RestaurantStatus.open,
+            color: const Color(0xFF2ECC71),
+            icon: Icons.check_circle_outline_rounded,
+            label: 'เปิดให้บริการ',
+            subtitle: 'พร้อมรับคำสั่งซื้อใหม่เข้าร้าน',
+          ),
+          const SizedBox(height: 12),
+          _buildOption(
+            status: RestaurantStatus.busy,
+            color: const Color(0xFFF39C12),
+            icon: Icons.access_time_rounded,
+            label: 'ยุ่ง (Busy)',
+            subtitle: 'ปรับเวลาเตรียมคำสั่งซื้อเพิ่มขึ้น',
+          ),
+          const SizedBox(height: 12),
+          _buildOption(
+            status: RestaurantStatus.paused,
+            color: const Color(0xFFE74C3C),
+            icon: Icons.pause_circle_outline_rounded,
+            label: 'หยุดชั่วคราว',
+            subtitle: 'ไม่รับคำสั่งซื้อเพิ่ม เพื่อจัดการหน้าร้าน',
           ),
 
           const SizedBox(height: 16),
@@ -97,26 +90,31 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
               children: [
                 Text(
                   'ร้านเปลี่ยนแปลงเวลาทำการ?',
-                  style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                  style: AppTypography.body3.copyWith(
+                    color: const Color(0xFF888888),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const OpeningHoursScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const OpeningHoursScreen(),
+                      ),
                     );
                   },
                   child: Text(
                     'อัปเดตเวลาทำการ',
-                    style: AppTypography.label3.copyWith(color: const Color(0xFF0066CC)),
+                    style: AppTypography.label3.copyWith(
+                      color: const Color(0xFF0066CC),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -137,14 +135,20 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00B14F),
+                backgroundColor: const Color(0xFFE5002B),
                 disabledBackgroundColor: const Color(0xFFCCCCCC),
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: const Text(
                 'ยืนยัน',
-                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -156,44 +160,62 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
   Widget _buildOption({
     required RestaurantStatus status,
     required Color color,
+    required IconData icon,
     required String label,
-    String? subtitle,
+    required String subtitle,
   }) {
     final isSelected = _selected == status;
-    return InkWell(
+    return GestureDetector(
       onTap: () => setState(() => _selected = status),
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.08) : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? color : const Color(0xFFE2E8F0),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
         child: Row(
           children: [
             Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isSelected ? color : const Color(0xFFF1F5F9),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? Colors.white : const Color(0xFF64748B),
+                size: 24,
+              ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: AppTypography.body1.copyWith(
+                    style: AppTypography.label1.copyWith(
                       color: const Color(0xFF111111),
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle,
-                      style: AppTypography.body3.copyWith(color: const Color(0xFF888888)),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: AppTypography.caption5.copyWith(
+                      color: const Color(0xFF64748B),
                     ),
+                  ),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle, color: Color(0xFF00B14F), size: 22),
+              Icon(Icons.check_circle_rounded, color: color, size: 24),
           ],
         ),
       ),
@@ -223,13 +245,18 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
             child: ElevatedButton(
               onPressed: () => Navigator.pop(ctx),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00B14F),
+                backgroundColor: const Color(0xFFE5002B),
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: const Text(
                 'ยืนยันเวลาทำการร้าน',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -240,7 +267,9 @@ class _StatusBottomSheetState extends State<StatusBottomSheet> {
               onPressed: () => Navigator.pop(ctx),
               child: Text(
                 'ยกเลิก',
-                style: AppTypography.label2.copyWith(color: const Color(0xFF888888)),
+                style: AppTypography.label2.copyWith(
+                  color: const Color(0xFF888888),
+                ),
               ),
             ),
           ),

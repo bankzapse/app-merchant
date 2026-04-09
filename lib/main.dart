@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:merchant_app/core/theme/app_theme.dart';
-import 'package:merchant_app/features/auth/presentation/screens/login_screen.dart';
-import 'package:merchant_app/features/auth/providers/auth_provider.dart';
-import 'package:merchant_app/features/home/presentation/screens/main_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/welcome_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/auth_phone_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/auth_email_password_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/auth_otp_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/auth_bank_info_screen.dart';
 import 'package:merchant_app/features/auth/presentation/screens/auth_business_info_screen.dart';
 import 'package:merchant_app/features/auth/presentation/screens/auth_business_type_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/auth_confirmation_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/auth_email_password_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/auth_register_otp_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/auth_login_otp_screen.dart';
 import 'package:merchant_app/features/auth/presentation/screens/auth_personal_info_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/auth_bank_info_screen.dart';
-import 'package:merchant_app/features/auth/presentation/screens/auth_confirmation_screen.dart';void main() {
+import 'package:merchant_app/features/auth/presentation/screens/auth_phone_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/splash_screen.dart';
+import 'package:merchant_app/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:merchant_app/features/auth/providers/auth_provider.dart';
+import 'package:merchant_app/features/home/presentation/screens/main_screen.dart';
+
+void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -21,14 +25,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     redirect: (context, state) {
       if (authState.isLoading) return null; // Wait for init
 
       final isAuth = authState.isAuthenticated;
       final authRoutes = [
+        '/splash',
         '/welcome',
-        '/login',
+        '/login/phone',
+        '/login/email',
+        '/login/otp',
+        '/forgot-password',
         '/register/phone',
         '/register/otp',
         '/register/email_password',
@@ -36,7 +44,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         '/register/business_type',
         '/register/personal_info',
         '/register/bank_info',
-        '/register/confirmation'
+        '/register/confirmation',
       ];
       final isAuthRoute = authRoutes.contains(state.matchedLocation);
 
@@ -47,24 +55,40 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
       ),
       GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
+        path: '/login/phone',
+        builder: (context, state) => const AuthPhoneScreen(flow: 'login'),
+      ),
+      GoRoute(
+        path: '/login/email',
+        builder: (context, state) => const AuthEmailPasswordScreen(flow: 'login'),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: '/register/phone',
-        builder: (context, state) => const AuthPhoneScreen(),
+        builder: (context, state) => const AuthPhoneScreen(flow: 'register'),
       ),
       GoRoute(
-        path: '/register/email_password',
-        builder: (context, state) => const AuthEmailPasswordScreen(),
+        path: '/login/otp',
+        builder: (context, state) => const AuthLoginOtpScreen(),
       ),
       GoRoute(
         path: '/register/otp',
-        builder: (context, state) => const AuthOtpScreen(),
+        builder: (context, state) => const AuthRegisterOtpScreen(),
+      ),
+      GoRoute(
+        path: '/register/email_password',
+        builder: (context, state) => const AuthEmailPasswordScreen(flow: 'register'),
       ),
       GoRoute(
         path: '/register/business_info',
@@ -86,10 +110,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/register/confirmation',
         builder: (context, state) => const AuthConfirmationScreen(),
       ),
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const MainScreen(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const MainScreen()),
     ],
   );
 });
@@ -105,9 +126,7 @@ class MyApp extends ConsumerWidget {
     if (authState.isLoading && !authState.isAuthenticated) {
       return MaterialApp(
         theme: AppTheme.lightTheme,
-        home: const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        ),
+        home: const Scaffold(body: Center(child: CircularProgressIndicator())),
       );
     }
 
