@@ -30,8 +30,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       if (authState.isLoading) return null; // Wait for init
 
       final isAuth = authState.isAuthenticated;
+      final isSplash = state.matchedLocation == '/splash';
+      
+      // If we are on splash screen, we must redirect once loading is done
+      if (isSplash) {
+        return isAuth ? '/' : '/welcome';
+      }
+
       final authRoutes = [
-        '/splash',
         '/welcome',
         '/login/phone',
         '/login/email',
